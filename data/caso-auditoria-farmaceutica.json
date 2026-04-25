@@ -1,0 +1,90 @@
+{
+  "id": "farmacia-san-gabriel-abastecimiento-001",
+  "title": "Caso guiado de abastecimiento de medicamentos",
+  "pharmacyName": "Farmacia San Gabriel",
+  "educationalRole": "El chatbot entrega solo datos del caso y orienta el razonamiento paso a paso.",
+  "openingStatement": "Hola. Soy el apoyo virtual de Farmacia San Gabriel. Puedo darte datos sobre precios mayoristas y ventas mensuales de paracetamol para que analices el abastecimiento. ¿Quieres partir por precios o por ventas?",
+  "context": {
+    "summary": "La farmacia comunitaria Farmacia San Gabriel está evaluando la compra de paracetamol 500 mg. El objetivo es comparar precios, revisar la demanda mensual y tomar una decisión de abastecimiento bien justificada.",
+    "product": "Paracetamol 500 mg",
+    "presentation": "Caja de 100 comprimidos",
+    "boxContent": "Cada caja contiene 100 comprimidos.",
+    "usageHint": "Puedes preguntar por marcas, precios, ventas de un mes, historial completo o ayuda para interpretar los datos."
+  },
+  "wholesalePrices": [
+    {
+      "brand": "Genfar",
+      "pricePerBox": 3200
+    },
+    {
+      "brand": "Chile",
+      "pricePerBox": 3450
+    },
+    {
+      "brand": "Mintlab",
+      "pricePerBox": 3700
+    },
+    {
+      "brand": "Bagó",
+      "pricePerBox": 4250
+    }
+  ],
+  "monthlySales": [
+    {
+      "month": "enero",
+      "units": 180
+    },
+    {
+      "month": "febrero",
+      "units": 160
+    },
+    {
+      "month": "marzo",
+      "units": 210
+    },
+    {
+      "month": "abril",
+      "units": 260
+    },
+    {
+      "month": "mayo",
+      "units": 390
+    },
+    {
+      "month": "junio",
+      "units": 540
+    },
+    {
+      "month": "julio",
+      "units": 620
+    },
+    {
+      "month": "agosto",
+      "units": 500
+    },
+    {
+      "month": "septiembre",
+      "units": 340
+    },
+    {
+      "month": "octubre",
+      "units": 260
+    },
+    {
+      "month": "noviembre",
+      "units": 220
+    },
+    {
+      "month": "diciembre",
+      "units": 190
+    }
+  ],
+  "learningGoals": [
+    "Calcular el costo por comprimido",
+    "Comparar precios mayoristas",
+    "Analizar la demanda mensual",
+    "Reconocer estacionalidad",
+    "Tomar decisiones de abastecimiento",
+    "Proponer stock minimo y stock de alerta"
+  ]
+}

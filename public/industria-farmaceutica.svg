@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
+  <title id="title">Industria farmaceutica ficticia</title>
+  <desc id="desc">Ilustracion de una planta farmaceutica con laboratorio, bodega, produccion y documentos de auditoria.</desc>
+  <rect width="900" height="520" fill="#dfe9e5"/>
+  <rect x="62" y="182" width="776" height="248" rx="6" fill="#ffffff" stroke="#9cafaa" stroke-width="4"/>
+  <rect x="92" y="216" width="180" height="172" fill="#eef6f4" stroke="#9cafaa" stroke-width="3"/>
+  <rect x="310" y="216" width="260" height="172" fill="#f7f8f6" stroke="#9cafaa" stroke-width="3"/>
+  <rect x="608" y="216" width="190" height="172" fill="#eef6f4" stroke="#9cafaa" stroke-width="3"/>
+  <path d="M92 216h180v42H92zM310 216h260v42H310zM608 216h190v42H608z" fill="#0f766e"/>
+  <g fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">
+    <text x="118" y="244">Bodega</text>
+    <text x="372" y="244">Produccion</text>
+    <text x="660" y="244">Calidad</text>
+  </g>
+  <g fill="#17211d" stroke="#5f6f68" stroke-width="3">
+    <rect x="122" y="286" width="44" height="76" rx="4"/>
+    <rect x="180" y="286" width="44" height="76" rx="4"/>
+    <rect x="350" y="284" width="178" height="44" rx="8" fill="#e8efec"/>
+    <circle cx="392" cy="352" r="26" fill="#e8efec"/>
+    <circle cx="486" cy="352" r="26" fill="#e8efec"/>
+    <rect x="642" y="288" width="118" height="26" rx="4" fill="#e8efec"/>
+    <rect x="662" y="330" width="78" height="34" rx="4" fill="#e8efec"/>
+  </g>
+  <path d="M154 142h592l92 40H62z" fill="#b8c8c3" stroke="#8aa09a" stroke-width="4"/>
+  <rect x="114" y="84" width="98" height="58" rx="4" fill="#ffffff" stroke="#8aa09a" stroke-width="4"/>
+  <rect x="236" y="68" width="124" height="74" rx="4" fill="#ffffff" stroke="#8aa09a" stroke-width="4"/>
+  <rect x="648" y="86" width="110" height="56" rx="4" fill="#ffffff" stroke="#8aa09a" stroke-width="4"/>
+  <g stroke="#0f766e" stroke-width="8" stroke-linecap="round">
+    <path d="M144 112h38"/>
+    <path d="M272 96h52"/>
+    <path d="M680 114h46"/>
+  </g>
+  <rect x="218" y="414" width="464" height="42" rx="21" fill="#cddbd6"/>
+  <g fill="#0f766e">
+    <circle cx="272" cy="435" r="14"/>
+    <circle cx="366" cy="435" r="14"/>
+    <circle cx="460" cy="435" r="14"/>
+    <circle cx="554" cy="435" r="14"/>
+    <circle cx="648" cy="435" r="14"/>
+  </g>
+  <rect x="690" y="54" width="132" height="112" rx="8" fill="#ffffff" stroke="#9cafaa" stroke-width="4"/>
+  <path d="M716 88h80M716 116h58M716 144h70" stroke="#5f6f68" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="704" cy="88" r="5" fill="#8a4b10"/>
+  <circle cx="704" cy="116" r="5" fill="#8a4b10"/>
+  <circle cx="704" cy="144" r="5" fill="#8a4b10"/>
+</svg>
