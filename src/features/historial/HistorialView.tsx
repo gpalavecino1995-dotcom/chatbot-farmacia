@@ -29,6 +29,7 @@ export function HistorialView({ state }: HistorialViewProps) {
                 <div>
                   <strong>Venta {sale.id.slice(0, 8)}</strong>
                   <span>{formatDate(sale.createdAt)}</span>
+                  <span>Correo: {sale.customerEmail || "No registrado"}</span>
                 </div>
                 <strong>{formatMoney(sale.total, state.settings.currency)}</strong>
               </div>

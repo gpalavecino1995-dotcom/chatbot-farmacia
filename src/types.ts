@@ -19,6 +19,7 @@ export type CartItem = {
 export type SaleRecord = {
   id: string;
   createdAt: string;
+  customerEmail: string;
   items: Array<{
     productId: string;
     name: string;

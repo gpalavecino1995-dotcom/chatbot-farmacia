@@ -482,6 +482,7 @@ td small {
 
 .quantity-control input,
 td input,
+.email-field input,
 .settings-form input,
 .settings-form select {
   width: 100%;
@@ -490,6 +491,24 @@ td input,
   padding: 10px;
   background: #fff;
   color: var(--ink);
+}
+
+.email-field {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.email-field input {
+  border: 2px solid var(--black);
+  padding: 13px 14px;
+  font-weight: 700;
+}
+
+.email-field input:focus {
+  outline: 3px solid rgba(255, 182, 0, 0.36);
 }
 
 .line-subtotal {
