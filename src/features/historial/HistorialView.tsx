@@ -29,6 +29,7 @@ export function HistorialView({ state }: HistorialViewProps) {
                 <div>
                   <strong>Venta {sale.id.slice(0, 8)}</strong>
                   <span>{formatDate(sale.createdAt)}</span>
+                  <span>Vendedor: {sale.sellerName || "No registrado"}</span>
                   <span>
                     {sale.receiptUrl
                       ? "Boleta ficticia QR generada"

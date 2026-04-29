@@ -54,6 +54,7 @@ export const initialState: AppState = {
     }
   ],
   sales: [],
+  sellerName: "",
   settings: {
     pharmacyName: "Centro de Simulacion Duoc UC",
     cashierName: "Estudiante en role play",

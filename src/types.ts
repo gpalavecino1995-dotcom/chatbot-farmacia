@@ -1,4 +1,9 @@
-export type SectionId = "venta" | "inventario" | "historial" | "configuracion";
+export type SectionId =
+  | "venta"
+  | "vendedor"
+  | "inventario"
+  | "historial"
+  | "configuracion";
 
 export type Product = {
   id: string;
@@ -21,6 +26,7 @@ export type SaleRecord = {
   id: string;
   createdAt: string;
   receiptUrl?: string;
+  sellerName?: string;
   items: Array<{
     productId: string;
     name: string;
@@ -43,4 +49,5 @@ export type AppState = {
   products: Product[];
   sales: SaleRecord[];
   settings: AppSettings;
+  sellerName: string;
 };

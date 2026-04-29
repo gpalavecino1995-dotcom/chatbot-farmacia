@@ -62,6 +62,7 @@ export function VentaView({ state, setState }: VentaViewProps) {
   );
 
   const total = cartLines.reduce((sum, line) => sum + line!.subtotal, 0);
+  const activeSeller = state.sellerName.trim();
 
   function addProduct(product: Product) {
     const currentQuantity =
@@ -156,6 +157,15 @@ export function VentaView({ state, setState }: VentaViewProps) {
       return;
     }
 
+    if (!activeSeller) {
+      setAlert({
+        tone: "warning",
+        message:
+          "Antes de finalizar, registra el nombre del vendedor en la pestaña Vendedor."
+      });
+      return;
+    }
+
     const saleItems = cartLines.map((line) => ({
       productId: line!.product.id,
       name: `${line!.product.name} ${line!.product.concentration}`,
@@ -168,6 +178,7 @@ export function VentaView({ state, setState }: VentaViewProps) {
     const sale = {
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
+      sellerName: activeSeller,
       items: saleItems,
       total
     };
@@ -218,8 +229,8 @@ export function VentaView({ state, setState }: VentaViewProps) {
           </p>
         </div>
         <div className="operator-card">
-          <span>Cajero</span>
-          <strong>{state.settings.cashierName}</strong>
+          <span>Vendedor</span>
+          <strong>{activeSeller || "Sin vendedor registrado"}</strong>
         </div>
       </header>
 

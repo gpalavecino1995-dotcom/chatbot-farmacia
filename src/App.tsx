@@ -7,10 +7,12 @@ import { ConfiguracionView } from "./features/configuracion/ConfiguracionView";
 import { HistorialView } from "./features/historial/HistorialView";
 import { InventarioView } from "./features/inventario/InventarioView";
 import { VentaView } from "./features/venta/VentaView";
+import { VendedorView } from "./features/vendedor/VendedorView";
 import { createReceiptJpg, parseReceiptPayload } from "./utils/receiptImage";
 
 const sections: Array<{ id: SectionId; label: string }> = [
   { id: "venta", label: "Venta" },
+  { id: "vendedor", label: "Vendedor" },
   { id: "inventario", label: "Inventario" },
   { id: "historial", label: "Historial" },
   { id: "configuracion", label: "Configuracion" }
@@ -92,6 +94,9 @@ export default function App() {
       <main className="main-panel">
         {activeSection === "venta" && (
           <VentaView state={state} setState={setState} />
+        )}
+        {activeSection === "vendedor" && (
+          <VendedorView state={state} setState={setState} />
         )}
         {activeSection === "inventario" && (
           <ProtectedSection

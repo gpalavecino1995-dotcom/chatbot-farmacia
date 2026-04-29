@@ -225,6 +225,7 @@ button:disabled {
 .cart-panel,
 .import-card,
 .scan-product-card,
+.seller-card,
 .table-card,
 .settings-form,
 .history-card,
@@ -296,6 +297,59 @@ button:disabled {
   gap: 7px;
   color: var(--muted);
   font-weight: 800;
+}
+
+.seller-card {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) minmax(340px, 1.15fr);
+  gap: 18px;
+  align-items: start;
+  padding: 18px;
+}
+
+.seller-card h3 {
+  margin: 4px 0 8px;
+}
+
+.seller-card p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.seller-card strong {
+  color: var(--black);
+}
+
+.seller-form {
+  display: grid;
+  gap: 14px;
+}
+
+.seller-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.seller-form input {
+  width: 100%;
+  border: 3px solid var(--black);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.seller-form input:focus {
+  outline: 3px solid rgba(255, 182, 0, 0.36);
+}
+
+.seller-actions {
+  display: grid;
+  grid-template-columns: 1fr 0.7fr;
+  gap: 10px;
 }
 
 .scan-product-form label.toggle-field,
@@ -929,6 +983,8 @@ th {
   .scan-product-card,
   .scan-product-form,
   .scan-product-actions,
+  .seller-card,
+  .seller-actions,
   .receipt-qr-panel,
   .sale-actions,
   .settings-form {

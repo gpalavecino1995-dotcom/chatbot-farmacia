@@ -35,7 +35,7 @@ export function createReceiptPayload(
     id: sale.id,
     createdAt: sale.createdAt,
     pharmacyName: settings.pharmacyName,
-    cashierName: settings.cashierName,
+    cashierName: sale.sellerName || settings.cashierName,
     currency: settings.currency,
     total: sale.total,
     items: sale.items.map((item) => ({
