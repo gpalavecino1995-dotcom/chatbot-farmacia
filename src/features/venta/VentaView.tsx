@@ -2,7 +2,11 @@ import { FormEvent, useMemo, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { AppState, CartItem, Product } from "../../types";
 import { formatMoney } from "../../utils/format";
-import { downloadSimulatedReceipt } from "../../utils/receiptPdf";
+import {
+  buildReceiptUrl,
+  createReceiptJpg,
+  createReceiptPayload
+} from "../../utils/receiptImage";
 
 type VentaViewProps = {
   state: AppState;
@@ -16,13 +20,21 @@ type PosAlert = {
   message: string;
 };
 
+type ReceiptPreview = {
+  imageUrl: string;
+  qrUrl: string;
+  receiptUrl: string;
+};
+
 function getCartProduct(products: Product[], item: CartItem) {
   return products.find((product) => product.id === item.productId);
 }
 
 export function VentaView({ state, setState }: VentaViewProps) {
   const [scanValue, setScanValue] = useState("");
-  const [customerEmail, setCustomerEmail] = useState("");
+  const [receiptPreview, setReceiptPreview] = useState<ReceiptPreview | null>(
+    null
+  );
   const [cart, setCart] = useState<CartItem[]>([]);
   const [alert, setAlert] = useState<PosAlert>({
     tone: "info",
@@ -49,10 +61,6 @@ export function VentaView({ state, setState }: VentaViewProps) {
   );
 
   const total = cartLines.reduce((sum, line) => sum + line!.subtotal, 0);
-
-  function isValidEmail(value: string) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
-  }
 
   function addProduct(product: Product) {
     const currentQuantity =
@@ -147,14 +155,6 @@ export function VentaView({ state, setState }: VentaViewProps) {
       return;
     }
 
-    if (!isValidEmail(customerEmail)) {
-      setAlert({
-        tone: "warning",
-        message: "Ingresa un correo valido para generar la boleta simulada."
-      });
-      return;
-    }
-
     const saleItems = cartLines.map((line) => ({
       productId: line!.product.id,
       name: `${line!.product.name} ${line!.product.concentration}`,
@@ -167,10 +167,15 @@ export function VentaView({ state, setState }: VentaViewProps) {
     const sale = {
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
-      customerEmail: customerEmail.trim(),
       items: saleItems,
       total
     };
+
+    const receiptPayload = createReceiptPayload(sale, state.settings);
+    const receiptUrl = buildReceiptUrl(receiptPayload);
+    const imageUrl = createReceiptJpg(receiptPayload);
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=${encodeURIComponent(receiptUrl)}`;
+    const saleWithReceipt = { ...sale, receiptUrl };
 
     setState((current) => ({
       ...current,
@@ -181,24 +186,23 @@ export function VentaView({ state, setState }: VentaViewProps) {
           : product;
       }),
       sales: [
-        sale,
+        saleWithReceipt,
         ...current.sales
       ]
     }));
 
-    downloadSimulatedReceipt(sale, state.settings);
     setCart([]);
-    setCustomerEmail("");
+    setReceiptPreview({ imageUrl, qrUrl, receiptUrl });
     setAlert({
       tone: "success",
-      message: `Venta finalizada. Boleta PDF generada y envio simulado registrado para ${sale.customerEmail}.`
+      message: "Venta simulada finalizada. Indica al paciente simulado que escanee el QR de la boleta ficticia."
     });
   }
 
   function newSale() {
     setCart([]);
     setScanValue("");
-    setCustomerEmail("");
+    setReceiptPreview(null);
     setAlert({ tone: "info", message: "Nueva venta simulada iniciada." });
   }
 
@@ -246,7 +250,8 @@ export function VentaView({ state, setState }: VentaViewProps) {
             <ul>
               <li>Saluda al paciente simulado y confirma los productos.</li>
               <li>Escanea cada producto o usa los accesos rapidos.</li>
-              <li>Revisa alertas y confirma el correo antes de finalizar.</li>
+              <li>Revisa alertas antes de finalizar.</li>
+              <li>Indica al paciente simulado que escanee el QR de la pantalla.</li>
               <li>Finaliza solo cuando el carrito coincida con el caso.</li>
             </ul>
           </div>
@@ -347,16 +352,31 @@ export function VentaView({ state, setState }: VentaViewProps) {
             <strong>{formatMoney(total, state.settings.currency)}</strong>
           </div>
 
-          <label className="email-field" htmlFor="customer-email">
-            Correo del cliente para boleta simulada
-            <input
-              id="customer-email"
-              onChange={(event) => setCustomerEmail(event.target.value)}
-              placeholder="cliente@correo.cl"
-              type="email"
-              value={customerEmail}
-            />
-          </label>
+          {receiptPreview && (
+            <section className="receipt-qr-panel" aria-label="Boleta ficticia con QR">
+              <div>
+                <span className="eyebrow">Boleta ficticia</span>
+                <h3>QR para el paciente simulado</h3>
+                <p>
+                  El estudiante debe pedir al paciente que escanee este codigo
+                  desde la pantalla para revisar la boleta ficticia.
+                </p>
+                <a href={receiptPreview.receiptUrl} rel="noreferrer" target="_blank">
+                  Abrir boleta ficticia
+                </a>
+              </div>
+              <img
+                className="receipt-qr"
+                src={receiptPreview.qrUrl}
+                alt="Codigo QR de boleta ficticia"
+              />
+              <img
+                className="receipt-image-preview"
+                src={receiptPreview.imageUrl}
+                alt="Vista previa de boleta ficticia"
+              />
+            </section>
+          )}
 
           <div className="sale-actions">
             <button className="primary-action" onClick={finishSale} type="button">

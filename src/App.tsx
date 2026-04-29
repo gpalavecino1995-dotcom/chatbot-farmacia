@@ -7,6 +7,7 @@ import { ConfiguracionView } from "./features/configuracion/ConfiguracionView";
 import { HistorialView } from "./features/historial/HistorialView";
 import { InventarioView } from "./features/inventario/InventarioView";
 import { VentaView } from "./features/venta/VentaView";
+import { createReceiptJpg, parseReceiptPayload } from "./utils/receiptImage";
 
 const sections: Array<{ id: SectionId; label: string }> = [
   { id: "venta", label: "Venta" },
@@ -19,6 +20,9 @@ const TEACHER_ACCESS_KEY = "AVS3111";
 const protectedSections: SectionId[] = ["inventario", "configuracion"];
 
 export default function App() {
+  const publicReceipt = parseReceiptPayload(
+    new URLSearchParams(window.location.search).get("boleta")
+  );
   const [activeSection, setActiveSection] = useState<SectionId>("venta");
   const [teacherAccess, setTeacherAccess] = useState(false);
   const [state, setState] = useState<AppState>(() => loadState());
@@ -42,6 +46,10 @@ export default function App() {
   function resetDemoData() {
     clearState();
     setState(initialState);
+  }
+
+  if (publicReceipt) {
+    return <PublicReceiptView imageUrl={createReceiptJpg(publicReceipt)} />;
   }
 
   return (
@@ -107,6 +115,26 @@ export default function App() {
         )}
       </main>
     </div>
+  );
+}
+
+type PublicReceiptViewProps = {
+  imageUrl: string;
+};
+
+function PublicReceiptView({ imageUrl }: PublicReceiptViewProps) {
+  return (
+    <main className="public-receipt-page">
+      <section className="public-receipt-card">
+        <span className="eyebrow">Boleta ficticia</span>
+        <h1>POS Farmacia Duoc UC</h1>
+        <p>
+          Imagen generada para actividad educativa. No corresponde a una venta
+          real ni a un documento tributario.
+        </p>
+        <img src={imageUrl} alt="Boleta ficticia POS Farmacia Duoc UC" />
+      </section>
+    </main>
   );
 }
 

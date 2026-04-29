@@ -482,7 +482,6 @@ td small {
 
 .quantity-control input,
 td input,
-.email-field input,
 .settings-form input,
 .settings-form select {
   width: 100%;
@@ -491,24 +490,6 @@ td input,
   padding: 10px;
   background: #fff;
   color: var(--ink);
-}
-
-.email-field {
-  display: grid;
-  gap: 8px;
-  margin-top: 14px;
-  color: var(--muted);
-  font-weight: 800;
-}
-
-.email-field input {
-  border: 2px solid var(--black);
-  padding: 13px 14px;
-  font-weight: 700;
-}
-
-.email-field input:focus {
-  outline: 3px solid rgba(255, 182, 0, 0.36);
 }
 
 .line-subtotal {
@@ -545,6 +526,46 @@ td input,
   grid-template-columns: 1.4fr 0.8fr;
   gap: 12px;
   margin-top: 14px;
+}
+
+.receipt-qr-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px 110px;
+  gap: 14px;
+  align-items: center;
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--surface-soft);
+}
+
+.receipt-qr-panel h3 {
+  margin: 4px 0 8px;
+}
+
+.receipt-qr-panel p {
+  margin: 0 0 8px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.receipt-qr-panel a {
+  color: var(--black);
+  font-weight: 850;
+}
+
+.receipt-qr,
+.receipt-image-preview {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.receipt-image-preview {
+  max-height: 170px;
+  object-fit: contain;
 }
 
 .primary-action,
@@ -692,6 +713,42 @@ th {
   color: var(--red);
 }
 
+.public-receipt-page {
+  min-height: 100vh;
+  padding: 24px;
+  background:
+    linear-gradient(90deg, rgba(255, 182, 0, 0.16), transparent 34%),
+    var(--bg);
+}
+
+.public-receipt-card {
+  width: min(620px, 100%);
+  margin: 0 auto;
+  border: 1px solid var(--line);
+  border-top: 6px solid var(--yellow);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.public-receipt-card h1 {
+  margin: 6px 0 8px;
+}
+
+.public-receipt-card p {
+  margin: 0 0 16px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.public-receipt-card img {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
 @media (max-width: 1040px) {
   .app-shell,
   .pos-grid {
@@ -716,6 +773,7 @@ th {
   .main-nav,
   .section-header,
   .scan-input-row,
+  .receipt-qr-panel,
   .sale-actions,
   .settings-form {
     grid-template-columns: 1fr;
