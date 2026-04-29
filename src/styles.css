@@ -224,6 +224,7 @@ button:disabled {
 .scan-panel,
 .cart-panel,
 .import-card,
+.scan-product-card,
 .table-card,
 .settings-form,
 .history-card,
@@ -260,6 +261,71 @@ button:disabled {
 
 .import-card strong {
   color: var(--black);
+}
+
+.scan-product-card {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(360px, 1.3fr);
+  gap: 18px;
+  align-items: start;
+  padding: 18px;
+}
+
+.scan-product-card h3 {
+  margin: 4px 0 8px;
+}
+
+.scan-product-card p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.scan-product-card strong {
+  color: var(--black);
+}
+
+.scan-product-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.scan-product-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.scan-product-form .full-field,
+.scan-product-actions {
+  grid-column: 1 / -1;
+}
+
+.scan-product-form input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 11px 12px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.scan-product-form .full-field input {
+  border: 3px solid var(--black);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.scan-product-form input:focus {
+  outline: 3px solid rgba(255, 182, 0, 0.36);
+}
+
+.scan-product-actions {
+  display: grid;
+  grid-template-columns: 1fr 0.7fr;
+  gap: 10px;
 }
 
 .file-upload {
@@ -823,6 +889,9 @@ th {
   .main-nav,
   .section-header,
   .scan-input-row,
+  .scan-product-card,
+  .scan-product-form,
+  .scan-product-actions,
   .receipt-qr-panel,
   .sale-actions,
   .settings-form {

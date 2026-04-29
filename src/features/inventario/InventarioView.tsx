@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import * as XLSX from "xlsx";
 import type { AppState, Product } from "../../types";
 import { formatMoney } from "../../utils/format";
@@ -12,6 +12,18 @@ type InventarioViewProps = {
 export function InventarioView({ state, setState }: InventarioViewProps) {
   const [importMessage, setImportMessage] = useState(
     "Puedes cargar el Excel del centro de simulaciones para reemplazar la base local."
+  );
+  const [scanProduct, setScanProduct] = useState({
+    sku: "",
+    name: "",
+    concentration: "",
+    form: "",
+    category: "",
+    price: "",
+    stock: ""
+  });
+  const [scanMessage, setScanMessage] = useState(
+    "Escanea el codigo de barra y completa los datos minimos del producto."
   );
 
   function updateProduct(productId: string, patch: Partial<Product>) {
@@ -115,6 +127,64 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
     }
   }
 
+  function handleScanProductSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const sku = scanProduct.sku.trim();
+    const name = scanProduct.name.trim();
+
+    if (!sku || !name) {
+      setScanMessage("El codigo SKU y el nombre del producto son obligatorios.");
+      return;
+    }
+
+    const price = Number(scanProduct.price);
+    const stock = Number(scanProduct.stock);
+
+    if (!Number.isFinite(price) || price < 0 || !Number.isFinite(stock) || stock < 0) {
+      setScanMessage("Precio y stock deben ser numeros validos.");
+      return;
+    }
+
+    const newProduct: Product = {
+      id: sku,
+      sku,
+      name,
+      concentration: scanProduct.concentration.trim() || "No especificada",
+      form: scanProduct.form.trim() || "No especificada",
+      category: scanProduct.category.trim() || "Sin categoria",
+      price,
+      stock
+    };
+
+    setState((current) => {
+      const exists = current.products.some((product) => product.sku === sku);
+      return {
+        ...current,
+        products: exists
+          ? current.products.map((product) =>
+              product.sku === sku ? { ...product, ...newProduct } : product
+            )
+          : [newProduct, ...current.products]
+      };
+    });
+
+    const existed = state.products.some((product) => product.sku === sku);
+    setScanMessage(
+      existed
+        ? `Producto actualizado por SKU ${sku}.`
+        : `Producto agregado por escaneo con SKU ${sku}.`
+    );
+    setScanProduct({
+      sku: "",
+      name: "",
+      concentration: "",
+      form: "",
+      category: "",
+      price: "",
+      stock: ""
+    });
+  }
+
   return (
     <section className="view-stack">
       <header className="section-header">
@@ -150,6 +220,139 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
             type="file"
           />
         </label>
+      </section>
+
+      <section className="scan-product-card">
+        <div>
+          <span className="eyebrow">Carga por escaneo</span>
+          <h3>Añadir producto con codigo de barra</h3>
+          <p>
+            Usa la pistola lectora en el campo SKU. Luego completa los datos del
+            producto y guardalo en la base local del simulador.
+          </p>
+          <strong>{scanMessage}</strong>
+        </div>
+
+        <form className="scan-product-form" onSubmit={handleScanProductSubmit}>
+          <label className="full-field">
+            SKU / codigo de barra
+            <input
+              autoComplete="off"
+              onChange={(event) =>
+                setScanProduct((current) => ({
+                  ...current,
+                  sku: event.target.value
+                }))
+              }
+              placeholder="Escanea aqui"
+              value={scanProduct.sku}
+            />
+          </label>
+          <label>
+            Nombre
+            <input
+              onChange={(event) =>
+                setScanProduct((current) => ({
+                  ...current,
+                  name: event.target.value
+                }))
+              }
+              placeholder="Ej: Paracetamol"
+              value={scanProduct.name}
+            />
+          </label>
+          <label>
+            Dosis / concentracion
+            <input
+              onChange={(event) =>
+                setScanProduct((current) => ({
+                  ...current,
+                  concentration: event.target.value
+                }))
+              }
+              placeholder="Ej: 500 mg"
+              value={scanProduct.concentration}
+            />
+          </label>
+          <label>
+            Presentacion
+            <input
+              onChange={(event) =>
+                setScanProduct((current) => ({
+                  ...current,
+                  form: event.target.value
+                }))
+              }
+              placeholder="Ej: Caja 16 comprimidos"
+              value={scanProduct.form}
+            />
+          </label>
+          <label>
+            Categoria
+            <input
+              onChange={(event) =>
+                setScanProduct((current) => ({
+                  ...current,
+                  category: event.target.value
+                }))
+              }
+              placeholder="Ej: Analgesico"
+              value={scanProduct.category}
+            />
+          </label>
+          <label>
+            Precio
+            <input
+              min="0"
+              onChange={(event) =>
+                setScanProduct((current) => ({
+                  ...current,
+                  price: event.target.value
+                }))
+              }
+              placeholder="0"
+              type="number"
+              value={scanProduct.price}
+            />
+          </label>
+          <label>
+            Stock
+            <input
+              min="0"
+              onChange={(event) =>
+                setScanProduct((current) => ({
+                  ...current,
+                  stock: event.target.value
+                }))
+              }
+              placeholder="0"
+              type="number"
+              value={scanProduct.stock}
+            />
+          </label>
+          <div className="scan-product-actions">
+            <button className="primary-action" type="submit">
+              Guardar producto
+            </button>
+            <button
+              className="secondary-action"
+              onClick={() =>
+                setScanProduct({
+                  sku: "",
+                  name: "",
+                  concentration: "",
+                  form: "",
+                  category: "",
+                  price: "",
+                  stock: ""
+                })
+              }
+              type="button"
+            >
+              Limpiar
+            </button>
+          </div>
+        </form>
       </section>
 
       <div className="table-card">
