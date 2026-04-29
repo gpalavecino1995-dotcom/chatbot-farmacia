@@ -174,7 +174,7 @@ export function VentaView({ state, setState }: VentaViewProps) {
     const receiptPayload = createReceiptPayload(sale, state.settings);
     const receiptUrl = buildReceiptUrl(receiptPayload);
     const imageUrl = createReceiptJpg(receiptPayload);
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=${encodeURIComponent(receiptUrl)}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=520x520&margin=24&ecc=H&data=${encodeURIComponent(receiptUrl)}`;
     const saleWithReceipt = { ...sale, receiptUrl };
 
     setState((current) => ({

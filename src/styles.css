@@ -530,13 +530,13 @@ td input,
 
 .receipt-qr-panel {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 170px 110px;
-  gap: 14px;
+  grid-template-columns: minmax(0, 0.85fr) minmax(280px, 360px);
+  gap: 18px;
   align-items: center;
   margin-top: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 14px;
+  padding: 18px;
   background: var(--surface-soft);
 }
 
@@ -555,17 +555,16 @@ td input,
   font-weight: 850;
 }
 
-.receipt-qr,
-.receipt-image-preview {
+.receipt-qr {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
+  padding: 16px;
 }
 
 .receipt-image-preview {
-  max-height: 170px;
-  object-fit: contain;
+  display: none;
 }
 
 .primary-action,
