@@ -560,6 +560,7 @@ td small {
 
 .quantity-control button,
 .remove-line,
+.danger-action,
 .secondary-action {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -586,6 +587,20 @@ td input,
 
 .remove-line {
   min-height: 38px;
+}
+
+.danger-action {
+  min-height: 38px;
+  padding: 8px 12px;
+  border-color: #f1b8b5;
+  background: var(--red-soft);
+  color: var(--red);
+  font-weight: 850;
+}
+
+.danger-action:hover {
+  border-color: var(--red);
+  background: #ffd7d7;
 }
 
 .total-box {

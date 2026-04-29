@@ -36,6 +36,21 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
     }));
   }
 
+  function deleteProduct(product: Product) {
+    const confirmed = window.confirm(
+      `¿Eliminar "${product.name}" del inventario simulado?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setState((current) => ({
+      ...current,
+      products: current.products.filter((item) => item.id !== product.id)
+    }));
+  }
+
   function readText(row: Record<string, unknown>, keys: string[]) {
     for (const key of keys) {
       const value = row[key];
@@ -387,6 +402,7 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
               <th>Stock</th>
               <th>Ilimitado</th>
               <th>Categoria</th>
+              <th>Accion</th>
             </tr>
           </thead>
           <tbody>
@@ -442,6 +458,15 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
                 </td>
                 <td>
                   {product.category}
+                </td>
+                <td>
+                  <button
+                    className="danger-action"
+                    onClick={() => deleteProduct(product)}
+                    type="button"
+                  >
+                    Eliminar
+                  </button>
                 </td>
               </tr>
             ))}
