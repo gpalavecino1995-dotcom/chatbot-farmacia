@@ -113,6 +113,10 @@ button:disabled {
 }
 
 .main-nav button {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
   border-radius: 8px;
   padding: 13px 14px;
   background: rgba(255, 255, 255, 0.1);
@@ -120,9 +124,24 @@ button:disabled {
   text-align: left;
 }
 
+.nav-lock {
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: rgba(255, 182, 0, 0.18);
+  color: var(--yellow);
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
 .main-nav button.active,
 .main-nav button:hover {
   background: var(--yellow);
+  color: var(--black);
+}
+
+.main-nav button.active .nav-lock,
+.main-nav button:hover .nav-lock {
+  background: rgba(0, 0, 0, 0.16);
   color: var(--black);
 }
 
@@ -594,6 +613,64 @@ th {
   display: flex;
   gap: 12px;
   grid-column: 1 / -1;
+}
+
+.protected-panel {
+  display: grid;
+  min-height: calc(100vh - 48px);
+  place-items: center;
+}
+
+.protected-card {
+  width: min(520px, 100%);
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--yellow);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.protected-card h2 {
+  margin: 6px 0 8px;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+
+.protected-card p {
+  margin: 0 0 18px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.protected-card form {
+  display: grid;
+  gap: 10px;
+}
+
+.protected-card label {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.protected-card input {
+  width: 100%;
+  border: 2px solid var(--black);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 1.1rem;
+  font-weight: 750;
+}
+
+.protected-card input:focus {
+  outline: 3px solid rgba(255, 182, 0, 0.36);
+}
+
+.access-error {
+  border-left: 5px solid var(--red);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--red-soft);
+  color: var(--red);
 }
 
 @media (max-width: 1040px) {

@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import { initialState } from "./data/seedData";
 import { clearState, loadState, saveState } from "./storage";
 import type { AppSettings, AppState, SectionId } from "./types";
@@ -14,8 +15,12 @@ const sections: Array<{ id: SectionId; label: string }> = [
   { id: "configuracion", label: "Configuracion" }
 ];
 
+const TEACHER_ACCESS_KEY = "AVS3111";
+const protectedSections: SectionId[] = ["inventario", "configuracion"];
+
 export default function App() {
   const [activeSection, setActiveSection] = useState<SectionId>("venta");
+  const [teacherAccess, setTeacherAccess] = useState(false);
   const [state, setState] = useState<AppState>(() => loadState());
 
   useEffect(() => {
@@ -60,6 +65,9 @@ export default function App() {
               type="button"
             >
               {section.label}
+              {protectedSections.includes(section.id) && !teacherAccess && (
+                <span className="nav-lock">Clave</span>
+              )}
             </button>
           ))}
         </nav>
@@ -75,17 +83,90 @@ export default function App() {
           <VentaView state={state} setState={setState} />
         )}
         {activeSection === "inventario" && (
-          <InventarioView state={state} setState={setState} />
+          <ProtectedSection
+            isUnlocked={teacherAccess}
+            onUnlock={() => setTeacherAccess(true)}
+            sectionName="Inventario"
+          >
+            <InventarioView state={state} setState={setState} />
+          </ProtectedSection>
         )}
         {activeSection === "historial" && <HistorialView state={state} />}
         {activeSection === "configuracion" && (
-          <ConfiguracionView
-            settings={state.settings}
-            onReset={resetDemoData}
-            onSave={updateSettings}
-          />
+          <ProtectedSection
+            isUnlocked={teacherAccess}
+            onUnlock={() => setTeacherAccess(true)}
+            sectionName="Configuracion"
+          >
+            <ConfiguracionView
+              settings={state.settings}
+              onReset={resetDemoData}
+              onSave={updateSettings}
+            />
+          </ProtectedSection>
         )}
       </main>
     </div>
+  );
+}
+
+type ProtectedSectionProps = {
+  children: ReactNode;
+  isUnlocked: boolean;
+  onUnlock: () => void;
+  sectionName: string;
+};
+
+function ProtectedSection({
+  children,
+  isUnlocked,
+  onUnlock,
+  sectionName
+}: ProtectedSectionProps) {
+  const [accessKey, setAccessKey] = useState("");
+  const [error, setError] = useState("");
+
+  if (isUnlocked) {
+    return children;
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (accessKey.trim().toUpperCase() === TEACHER_ACCESS_KEY) {
+      setError("");
+      setAccessKey("");
+      onUnlock();
+      return;
+    }
+
+    setError("Clave incorrecta. Solicita la clave docente de la clase.");
+  }
+
+  return (
+    <section className="protected-panel">
+      <div className="protected-card">
+        <span className="eyebrow">Acceso docente</span>
+        <h2>{sectionName} bloqueado</h2>
+        <p>
+          Esta seccion permite modificar datos del simulador. Ingresa la clave
+          de la clase para continuar.
+        </p>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="teacher-access-key">Clave de clase</label>
+          <input
+            autoComplete="off"
+            id="teacher-access-key"
+            onChange={(event) => setAccessKey(event.target.value)}
+            placeholder="Ej: AVS3111"
+            type="password"
+            value={accessKey}
+          />
+          {error && <strong className="access-error">{error}</strong>}
+          <button className="primary-action" type="submit">
+            Desbloquear
+          </button>
+        </form>
+      </div>
+    </section>
   );
 }
