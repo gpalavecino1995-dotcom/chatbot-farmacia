@@ -1,16 +1,19 @@
 {
-  "name": "chatbot-farmacia-comunitaria",
+  "name": "simulador-pos-farmacia",
   "version": "1.0.0",
   "private": true,
-  "description": "Aplicacion educativa para guiar el abastecimiento de medicamentos en farmacia comunitaria.",
+  "description": "Aplicacion web educativa para simular una caja POS de farmacia comunitaria.",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "tsc -b --pretty false"
   },
   "dependencies": {
-    "next": "14.2.5",
+    "@vitejs/plugin-react": "4.3.1",
+    "vite": "5.4.2",
+    "xlsx": "0.18.5",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
@@ -18,8 +21,6 @@
     "@types/node": "20.14.10",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
-    "eslint": "8.57.0",
-    "eslint-config-next": "14.2.5",
     "typescript": "5.5.3"
   }
 }
