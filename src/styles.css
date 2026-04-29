@@ -555,6 +555,18 @@ td input,
   font-weight: 850;
 }
 
+.receipt-qr-button {
+  display: grid;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--black);
+  font-weight: 850;
+  padding: 0;
+  text-align: center;
+}
+
 .receipt-qr {
   width: 100%;
   border: 1px solid var(--line);
@@ -565,6 +577,45 @@ td input,
 
 .receipt-image-preview {
   display: none;
+}
+
+.qr-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.82);
+  padding: 24px;
+}
+
+.qr-modal-card {
+  display: grid;
+  gap: 14px;
+  width: min(760px, 96vw);
+  border-radius: 8px;
+  background: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.qr-modal-card h3 {
+  margin: 4px 0 6px;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.qr-modal-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.qr-modal-card img {
+  width: min(640px, 86vw);
+  justify-self: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 18px;
 }
 
 .primary-action,

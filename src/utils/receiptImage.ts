@@ -17,6 +17,16 @@ type ReceiptPayload = {
   }>;
 };
 
+type CompactReceiptPayload = {
+  i: string;
+  d: string;
+  f: string;
+  c: string;
+  m: string;
+  t: number;
+  p: Array<[string, string, number, number, number]>;
+};
+
 export function createReceiptPayload(
   sale: SaleRecord,
   settings: AppSettings
@@ -42,7 +52,7 @@ export function buildReceiptUrl(payload: ReceiptPayload) {
   const url = new URL(window.location.href);
   url.search = "";
   url.hash = "";
-  url.searchParams.set("boleta", encodePayload(payload));
+  url.searchParams.set("b", encodePayload(payload));
   return url.toString();
 }
 
@@ -52,7 +62,10 @@ export function parseReceiptPayload(value: string | null) {
   }
 
   try {
-    return JSON.parse(decodePayload(value)) as ReceiptPayload;
+    const decoded = JSON.parse(decodePayload(value)) as
+      | ReceiptPayload
+      | CompactReceiptPayload;
+    return expandPayload(decoded);
   } catch {
     return null;
   }
@@ -160,13 +173,52 @@ function drawLine(
 }
 
 function encodePayload(payload: ReceiptPayload) {
-  const json = JSON.stringify(payload);
+  const compact: CompactReceiptPayload = {
+    i: payload.id,
+    d: payload.createdAt,
+    f: payload.pharmacyName,
+    c: payload.cashierName,
+    m: payload.currency,
+    t: payload.total,
+    p: payload.items.map((item) => [
+      item.name,
+      item.sku,
+      item.quantity,
+      item.unitPrice,
+      item.subtotal
+    ])
+  };
+  const json = JSON.stringify(compact);
   const bytes = new TextEncoder().encode(json);
   let binary = "";
   bytes.forEach((byte) => {
     binary += String.fromCharCode(byte);
   });
   return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function expandPayload(
+  payload: ReceiptPayload | CompactReceiptPayload
+): ReceiptPayload {
+  if ("items" in payload) {
+    return payload;
+  }
+
+  return {
+    id: payload.i,
+    createdAt: payload.d,
+    pharmacyName: payload.f,
+    cashierName: payload.c,
+    currency: payload.m,
+    total: payload.t,
+    items: payload.p.map(([name, sku, quantity, unitPrice, subtotal]) => ({
+      name,
+      sku,
+      quantity,
+      unitPrice,
+      subtotal
+    }))
+  };
 }
 
 function decodePayload(value: string) {

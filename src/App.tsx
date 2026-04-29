@@ -21,7 +21,8 @@ const protectedSections: SectionId[] = ["inventario", "configuracion"];
 
 export default function App() {
   const publicReceipt = parseReceiptPayload(
-    new URLSearchParams(window.location.search).get("boleta")
+    new URLSearchParams(window.location.search).get("b") ??
+      new URLSearchParams(window.location.search).get("boleta")
   );
   const [activeSection, setActiveSection] = useState<SectionId>("venta");
   const [teacherAccess, setTeacherAccess] = useState(false);

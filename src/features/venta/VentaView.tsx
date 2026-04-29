@@ -35,6 +35,7 @@ export function VentaView({ state, setState }: VentaViewProps) {
   const [receiptPreview, setReceiptPreview] = useState<ReceiptPreview | null>(
     null
   );
+  const [expandedQr, setExpandedQr] = useState(false);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [alert, setAlert] = useState<PosAlert>({
     tone: "info",
@@ -174,7 +175,7 @@ export function VentaView({ state, setState }: VentaViewProps) {
     const receiptPayload = createReceiptPayload(sale, state.settings);
     const receiptUrl = buildReceiptUrl(receiptPayload);
     const imageUrl = createReceiptJpg(receiptPayload);
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=520x520&margin=24&ecc=H&data=${encodeURIComponent(receiptUrl)}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=720x720&margin=32&ecc=H&data=${encodeURIComponent(receiptUrl)}`;
     const saleWithReceipt = { ...sale, receiptUrl };
 
     setState((current) => ({
@@ -185,17 +186,15 @@ export function VentaView({ state, setState }: VentaViewProps) {
           ? { ...product, stock: product.stock - sold.quantity }
           : product;
       }),
-      sales: [
-        saleWithReceipt,
-        ...current.sales
-      ]
+      sales: [saleWithReceipt, ...current.sales]
     }));
 
     setCart([]);
     setReceiptPreview({ imageUrl, qrUrl, receiptUrl });
     setAlert({
       tone: "success",
-      message: "Venta simulada finalizada. Indica al paciente simulado que escanee el QR de la boleta ficticia."
+      message:
+        "Venta simulada finalizada. Indica al paciente simulado que escanee el QR de la boleta ficticia."
     });
   }
 
@@ -203,6 +202,7 @@ export function VentaView({ state, setState }: VentaViewProps) {
     setCart([]);
     setScanValue("");
     setReceiptPreview(null);
+    setExpandedQr(false);
     setAlert({ tone: "info", message: "Nueva venta simulada iniciada." });
   }
 
@@ -268,7 +268,7 @@ export function VentaView({ state, setState }: VentaViewProps) {
                 >
                   <strong>{product.name}</strong>
                   <span>
-                    {product.concentration} · Stock {product.stock}
+                    {product.concentration} - Stock {product.stock}
                   </span>
                 </button>
               ))}
@@ -365,17 +365,44 @@ export function VentaView({ state, setState }: VentaViewProps) {
                   Abrir boleta ficticia
                 </a>
               </div>
-              <img
-                className="receipt-qr"
-                src={receiptPreview.qrUrl}
-                alt="Codigo QR de boleta ficticia"
-              />
+              <button
+                className="receipt-qr-button"
+                onClick={() => setExpandedQr(true)}
+                type="button"
+              >
+                <img
+                  className="receipt-qr"
+                  src={receiptPreview.qrUrl}
+                  alt="Codigo QR de boleta ficticia"
+                />
+                <span>Tocar para ampliar</span>
+              </button>
               <img
                 className="receipt-image-preview"
                 src={receiptPreview.imageUrl}
                 alt="Vista previa de boleta ficticia"
               />
             </section>
+          )}
+
+          {receiptPreview && expandedQr && (
+            <div className="qr-modal" role="dialog" aria-modal="true">
+              <div className="qr-modal-card">
+                <div>
+                  <span className="eyebrow">Escaneo del paciente</span>
+                  <h3>QR de boleta ficticia</h3>
+                  <p>Acerca el celular a la pantalla para escanear.</p>
+                </div>
+                <img src={receiptPreview.qrUrl} alt="Codigo QR ampliado" />
+                <button
+                  className="secondary-action"
+                  onClick={() => setExpandedQr(false)}
+                  type="button"
+                >
+                  Cerrar QR
+                </button>
+              </div>
+            </div>
           )}
 
           <div className="sale-actions">
