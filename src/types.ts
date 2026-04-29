@@ -9,6 +9,7 @@ export type Product = {
   concentration: string;
   price: number;
   stock: number;
+  unlimitedStock?: boolean;
 };
 
 export type CartItem = {

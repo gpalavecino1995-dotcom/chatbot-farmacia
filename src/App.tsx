@@ -35,7 +35,9 @@ export default function App() {
   const lowStockCount = useMemo(
     () =>
       state.products.filter(
-        (product) => product.stock <= state.settings.lowStockThreshold
+        (product) =>
+          !product.unlimitedStock &&
+          product.stock <= state.settings.lowStockThreshold
       ).length,
     [state.products, state.settings.lowStockThreshold]
   );

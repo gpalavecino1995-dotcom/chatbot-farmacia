@@ -298,6 +298,22 @@ button:disabled {
   font-weight: 800;
 }
 
+.scan-product-form label.toggle-field,
+.table-toggle {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--ink);
+  font-weight: 850;
+}
+
+.toggle-field input,
+.table-toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--yellow);
+}
+
 .scan-product-form .full-field,
 .scan-product-actions {
   grid-column: 1 / -1;
@@ -310,6 +326,12 @@ button:disabled {
   padding: 11px 12px;
   background: #fff;
   color: var(--ink);
+}
+
+.scan-product-form input:disabled,
+td input:disabled {
+  background: #ececea;
+  color: var(--muted);
 }
 
 .scan-product-form .full-field input {

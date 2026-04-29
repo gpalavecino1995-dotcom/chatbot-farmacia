@@ -67,7 +67,7 @@ export function VentaView({ state, setState }: VentaViewProps) {
     const currentQuantity =
       cart.find((item) => item.productId === product.id)?.quantity ?? 0;
 
-    if (product.stock <= currentQuantity) {
+    if (!product.unlimitedStock && product.stock <= currentQuantity) {
       setAlert({
         tone: "danger",
         message: `Stock insuficiente para ${product.name} ${product.concentration}.`
@@ -132,7 +132,7 @@ export function VentaView({ state, setState }: VentaViewProps) {
     }
 
     const product = state.products.find((item) => item.id === productId);
-    if (product && quantity > product.stock) {
+    if (product && !product.unlimitedStock && quantity > product.stock) {
       setAlert({
         tone: "danger",
         message: `No hay stock suficiente. Disponible: ${product.stock}.`
@@ -182,7 +182,7 @@ export function VentaView({ state, setState }: VentaViewProps) {
       ...current,
       products: current.products.map((product) => {
         const sold = cart.find((item) => item.productId === product.id);
-        return sold
+        return sold && !product.unlimitedStock
           ? { ...product, stock: product.stock - sold.quantity }
           : product;
       }),
@@ -261,14 +261,17 @@ export function VentaView({ state, setState }: VentaViewProps) {
             <div className="product-shortcuts">
               {state.products.map((product) => (
                 <button
-                  disabled={product.stock === 0}
+                  disabled={!product.unlimitedStock && product.stock === 0}
                   key={product.id}
                   onClick={() => addProduct(product)}
                   type="button"
                 >
                   <strong>{product.name}</strong>
                   <span>
-                    {product.concentration} - Stock {product.stock}
+                    {product.concentration} -{" "}
+                    {product.unlimitedStock
+                      ? "Stock ilimitado"
+                      : `Stock ${product.stock}`}
                   </span>
                 </button>
               ))}

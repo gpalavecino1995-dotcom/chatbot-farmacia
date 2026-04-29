@@ -20,7 +20,8 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
     form: "",
     category: "",
     price: "",
-    stock: ""
+    stock: "",
+    unlimitedStock: false
   });
   const [scanMessage, setScanMessage] = useState(
     "Escanea el codigo de barra y completa los datos minimos del producto."
@@ -95,7 +96,11 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
         "No especificada",
       concentration: doseForm || "No especificada",
       price: readNumber(row, ["Precio de venta", "precio", "Precio", "price"], 0),
-      stock: readNumber(row, ["stock", "Stock", "STOCK", "cantidad", "Cantidad"], 0)
+      stock: readNumber(row, ["stock", "Stock", "STOCK", "cantidad", "Cantidad"], 0),
+      unlimitedStock:
+        readText(row, ["ilimitado", "Ilimitado", "stock_ilimitado", "Stock ilimitado"])
+          .toLowerCase()
+          .startsWith("s")
     };
   }
 
@@ -153,7 +158,8 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
       form: scanProduct.form.trim() || "No especificada",
       category: scanProduct.category.trim() || "Sin categoria",
       price,
-      stock
+      stock,
+      unlimitedStock: scanProduct.unlimitedStock
     };
 
     setState((current) => {
@@ -181,7 +187,8 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
       form: "",
       category: "",
       price: "",
-      stock: ""
+      stock: "",
+      unlimitedStock: false
     });
   }
 
@@ -318,6 +325,7 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
           <label>
             Stock
             <input
+              disabled={scanProduct.unlimitedStock}
               min="0"
               onChange={(event) =>
                 setScanProduct((current) => ({
@@ -329,6 +337,19 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
               type="number"
               value={scanProduct.stock}
             />
+          </label>
+          <label className="toggle-field">
+            <input
+              checked={scanProduct.unlimitedStock}
+              onChange={(event) =>
+                setScanProduct((current) => ({
+                  ...current,
+                  unlimitedStock: event.target.checked
+                }))
+              }
+              type="checkbox"
+            />
+            Stock ilimitado
           </label>
           <div className="scan-product-actions">
             <button className="primary-action" type="submit">
@@ -344,7 +365,8 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
                   form: "",
                   category: "",
                   price: "",
-                  stock: ""
+                  stock: "",
+                  unlimitedStock: false
                 })
               }
               type="button"
@@ -363,6 +385,7 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
               <th>Codigo</th>
               <th>Precio</th>
               <th>Stock</th>
+              <th>Ilimitado</th>
               <th>Categoria</th>
             </tr>
           </thead>
@@ -378,6 +401,7 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
                 <td>{product.sku}</td>
                 <td>
                   <input
+                    disabled={product.unlimitedStock}
                     min="0"
                     onChange={(event) =>
                       updateProduct(product.id, {
@@ -400,6 +424,21 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
                     type="number"
                     value={product.stock}
                   />
+                  {product.unlimitedStock && <small>Sin descuento de stock</small>}
+                </td>
+                <td>
+                  <label className="table-toggle">
+                    <input
+                      checked={Boolean(product.unlimitedStock)}
+                      onChange={(event) =>
+                        updateProduct(product.id, {
+                          unlimitedStock: event.target.checked
+                        })
+                      }
+                      type="checkbox"
+                    />
+                    <span>{product.unlimitedStock ? "Activo" : "No"}</span>
+                  </label>
                 </td>
                 <td>
                   {product.category}
