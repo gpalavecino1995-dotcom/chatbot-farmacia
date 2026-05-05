@@ -59,6 +59,7 @@ export const initialState: AppState = {
     pharmacyName: "Centro de Simulacion Duoc UC",
     cashierName: "Estudiante en role play",
     currency: "CLP",
-    lowStockThreshold: 8
+    lowStockThreshold: 8,
+    requireCustomerRut: false
   }
 };

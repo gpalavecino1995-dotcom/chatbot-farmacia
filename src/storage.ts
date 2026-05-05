@@ -10,9 +10,16 @@ export function loadState(): AppState {
       return initialState;
     }
 
+    const parsed = JSON.parse(saved) as Partial<AppState>;
+
     return {
       ...initialState,
-      ...JSON.parse(saved)
+      ...parsed,
+      settings: {
+        ...initialState.settings,
+        ...parsed.settings
+      },
+      sellerName: parsed.sellerName ?? initialState.sellerName
     };
   } catch {
     return initialState;

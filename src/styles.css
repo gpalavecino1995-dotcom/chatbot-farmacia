@@ -775,6 +775,92 @@ td input,
   padding: 18px;
 }
 
+.patient-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 21;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.72);
+  padding: 24px;
+}
+
+.patient-modal-card {
+  display: grid;
+  gap: 16px;
+  width: min(560px, 96vw);
+  border-top: 6px solid var(--yellow);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+
+.patient-modal-card h3 {
+  margin: 4px 0 8px;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
+
+.patient-modal-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.patient-modal-card label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.patient-modal-card label > input:not([type]),
+.patient-modal-card input[type="text"] {
+  width: 100%;
+  border: 2px solid var(--black);
+  border-radius: 8px;
+  padding: 13px 14px;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.patient-modal-card input:focus {
+  outline: 3px solid rgba(255, 182, 0, 0.36);
+}
+
+.patient-modal-card fieldset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.patient-modal-card legend {
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.patient-modal-card fieldset label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--ink);
+}
+
+.patient-modal-card input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--yellow);
+}
+
+.patient-modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 0.7fr;
+  gap: 10px;
+}
+
 .primary-action,
 .secondary-action {
   min-height: 58px;
@@ -854,6 +940,21 @@ th {
   gap: 8px;
   color: var(--muted);
   font-weight: 750;
+}
+
+.settings-form label.settings-toggle {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  grid-column: 1 / -1;
+  color: var(--ink);
+  font-weight: 850;
+}
+
+.settings-toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--yellow);
 }
 
 .settings-actions {
@@ -985,6 +1086,8 @@ th {
   .scan-product-actions,
   .seller-card,
   .seller-actions,
+  .patient-modal-card fieldset,
+  .patient-modal-actions,
   .receipt-qr-panel,
   .sale-actions,
   .settings-form {

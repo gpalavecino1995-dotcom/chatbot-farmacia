@@ -26,6 +26,11 @@ type ReceiptPreview = {
   receiptUrl: string;
 };
 
+type PatientSaleData = {
+  patientRut: string;
+  healthProvider: "FONASA" | "ISAPRE";
+};
+
 function getCartProduct(products: Product[], item: CartItem) {
   return products.find((product) => product.id === item.productId);
 }
@@ -36,6 +41,11 @@ export function VentaView({ state, setState }: VentaViewProps) {
     null
   );
   const [expandedQr, setExpandedQr] = useState(false);
+  const [showPatientModal, setShowPatientModal] = useState(false);
+  const [patientRut, setPatientRut] = useState("");
+  const [healthProvider, setHealthProvider] = useState<"" | "FONASA" | "ISAPRE">(
+    ""
+  );
   const [cart, setCart] = useState<CartItem[]>([]);
   const [alert, setAlert] = useState<PosAlert>({
     tone: "info",
@@ -166,6 +176,23 @@ export function VentaView({ state, setState }: VentaViewProps) {
       return;
     }
 
+    if (state.settings.requireCustomerRut) {
+      setShowPatientModal(true);
+      return;
+    }
+
+    completeSale();
+  }
+
+  function completeSale(patientData?: PatientSaleData) {
+    if (cartLines.length === 0) {
+      setAlert({
+        tone: "warning",
+        message: "Agrega productos antes de finalizar la venta simulada."
+      });
+      return;
+    }
+
     const saleItems = cartLines.map((line) => ({
       productId: line!.product.id,
       name: `${line!.product.name} ${line!.product.concentration}`,
@@ -179,6 +206,8 @@ export function VentaView({ state, setState }: VentaViewProps) {
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
       sellerName: activeSeller,
+      patientRut: patientData?.patientRut,
+      healthProvider: patientData?.healthProvider,
       items: saleItems,
       total
     };
@@ -201,6 +230,9 @@ export function VentaView({ state, setState }: VentaViewProps) {
     }));
 
     setCart([]);
+    setPatientRut("");
+    setHealthProvider("");
+    setShowPatientModal(false);
     setReceiptPreview({ imageUrl, qrUrl, receiptUrl });
     setAlert({
       tone: "success",
@@ -214,7 +246,33 @@ export function VentaView({ state, setState }: VentaViewProps) {
     setScanValue("");
     setReceiptPreview(null);
     setExpandedQr(false);
+    setShowPatientModal(false);
+    setPatientRut("");
+    setHealthProvider("");
     setAlert({ tone: "info", message: "Nueva venta simulada iniciada." });
+  }
+
+  function submitPatientData(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const cleanRut = patientRut.trim();
+
+    if (!cleanRut) {
+      setAlert({ tone: "warning", message: "Ingresa el RUT del paciente." });
+      return;
+    }
+
+    if (!healthProvider) {
+      setAlert({
+        tone: "warning",
+        message: "Selecciona si el paciente posee FONASA o ISAPRE."
+      });
+      return;
+    }
+
+    completeSale({
+      patientRut: cleanRut,
+      healthProvider
+    });
   }
 
   return (
@@ -416,6 +474,62 @@ export function VentaView({ state, setState }: VentaViewProps) {
                   Cerrar QR
                 </button>
               </div>
+            </div>
+          )}
+
+          {showPatientModal && (
+            <div className="patient-modal" role="dialog" aria-modal="true">
+              <form className="patient-modal-card" onSubmit={submitPatientData}>
+                <div>
+                  <span className="eyebrow">Datos del paciente</span>
+                  <h3>Finalizar venta simulada</h3>
+                  <p>
+                    Para continuar, solicita el RUT del paciente y consulta su
+                    prestador de salud.
+                  </p>
+                </div>
+                <label>
+                  RUT del paciente
+                  <input
+                    autoFocus
+                    onChange={(event) => setPatientRut(event.target.value)}
+                    placeholder="Ej: 12.345.678-9"
+                    type="text"
+                    value={patientRut}
+                  />
+                </label>
+                <fieldset>
+                  <legend>Prestador de salud</legend>
+                  <label>
+                    <input
+                      checked={healthProvider === "FONASA"}
+                      onChange={() => setHealthProvider("FONASA")}
+                      type="radio"
+                    />
+                    FONASA
+                  </label>
+                  <label>
+                    <input
+                      checked={healthProvider === "ISAPRE"}
+                      onChange={() => setHealthProvider("ISAPRE")}
+                      type="radio"
+                    />
+                    ISAPRE
+                  </label>
+                </fieldset>
+                <div className="patient-modal-actions">
+                  <button className="primary-action" type="submit">
+                    Continuar venta
+                  </button>
+                  <button
+                    className="secondary-action"
+                    onClick={() => setShowPatientModal(false)}
+                    type="button"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
             </div>
           )}
 

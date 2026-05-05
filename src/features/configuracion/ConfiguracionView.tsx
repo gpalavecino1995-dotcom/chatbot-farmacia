@@ -81,6 +81,19 @@ export function ConfiguracionView({
             value={draft.lowStockThreshold}
           />
         </label>
+        <label className="settings-toggle">
+          <input
+            checked={draft.requireCustomerRut}
+            onChange={(event) =>
+              setDraft((current) => ({
+                ...current,
+                requireCustomerRut: event.target.checked
+              }))
+            }
+            type="checkbox"
+          />
+          Solicitar RUT cliente y prestador de salud al finalizar venta
+        </label>
         <div className="settings-actions">
           <button className="primary-action" type="submit">
             Guardar configuracion

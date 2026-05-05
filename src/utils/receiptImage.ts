@@ -6,6 +6,8 @@ type ReceiptPayload = {
   createdAt: string;
   pharmacyName: string;
   cashierName: string;
+  patientRut?: string;
+  healthProvider?: "FONASA" | "ISAPRE";
   currency: string;
   total: number;
   items: Array<{
@@ -22,6 +24,8 @@ type CompactReceiptPayload = {
   d: string;
   f: string;
   c: string;
+  r?: string;
+  s?: "FONASA" | "ISAPRE";
   m: string;
   t: number;
   p: Array<[string, string, number, number, number]>;
@@ -36,6 +40,8 @@ export function createReceiptPayload(
     createdAt: sale.createdAt,
     pharmacyName: settings.pharmacyName,
     cashierName: sale.sellerName || settings.cashierName,
+    patientRut: sale.patientRut,
+    healthProvider: sale.healthProvider,
     currency: settings.currency,
     total: sale.total,
     items: sale.items.map((item) => ({
@@ -102,6 +108,14 @@ export function createReceiptJpg(payload: ReceiptPayload) {
   y += lineHeight;
   drawLine(context, `Cajero: ${payload.cashierName}`, 28, y);
   y += lineHeight;
+  if (payload.patientRut) {
+    drawLine(context, `RUT paciente: ${payload.patientRut}`, 28, y);
+    y += lineHeight;
+  }
+  if (payload.healthProvider) {
+    drawLine(context, `Prestador de salud: ${payload.healthProvider}`, 28, y);
+    y += lineHeight;
+  }
   drawLine(context, `Folio ficticio: ${payload.id.slice(0, 8).toUpperCase()}`, 28, y);
   y += lineHeight;
   drawLine(context, `Fecha: ${new Date(payload.createdAt).toLocaleString("es-CL")}`, 28, y);
@@ -178,6 +192,8 @@ function encodePayload(payload: ReceiptPayload) {
     d: payload.createdAt,
     f: payload.pharmacyName,
     c: payload.cashierName,
+    r: payload.patientRut,
+    s: payload.healthProvider,
     m: payload.currency,
     t: payload.total,
     p: payload.items.map((item) => [
@@ -209,6 +225,8 @@ function expandPayload(
     createdAt: payload.d,
     pharmacyName: payload.f,
     cashierName: payload.c,
+    patientRut: payload.r,
+    healthProvider: payload.s,
     currency: payload.m,
     total: payload.t,
     items: payload.p.map(([name, sku, quantity, unitPrice, subtotal]) => ({

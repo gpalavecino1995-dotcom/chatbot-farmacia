@@ -27,6 +27,8 @@ export type SaleRecord = {
   createdAt: string;
   receiptUrl?: string;
   sellerName?: string;
+  patientRut?: string;
+  healthProvider?: "FONASA" | "ISAPRE";
   items: Array<{
     productId: string;
     name: string;
@@ -43,6 +45,7 @@ export type AppSettings = {
   cashierName: string;
   currency: string;
   lowStockThreshold: number;
+  requireCustomerRut: boolean;
 };
 
 export type AppState = {
