@@ -224,6 +224,7 @@ button:disabled {
 .scan-panel,
 .cart-panel,
 .import-card,
+.backup-inventory-card,
 .bulk-inventory-card,
 .scan-product-card,
 .inventory-search-card,
@@ -266,6 +267,7 @@ button:disabled {
   color: var(--black);
 }
 
+.backup-inventory-card,
 .bulk-inventory-card {
   display: flex;
   gap: 18px;
@@ -274,10 +276,12 @@ button:disabled {
   padding: 18px;
 }
 
+.backup-inventory-card h3,
 .bulk-inventory-card h3 {
   margin: 4px 0 8px;
 }
 
+.backup-inventory-card p,
 .bulk-inventory-card p {
   max-width: 780px;
   margin: 0;
@@ -285,6 +289,7 @@ button:disabled {
   line-height: 1.5;
 }
 
+.backup-inventory-card button,
 .bulk-inventory-card button {
   min-width: 260px;
 }
@@ -1194,6 +1199,7 @@ th {
 
   .section-header,
   .import-card,
+  .backup-inventory-card,
   .bulk-inventory-card,
   .cart-header,
   .history-card-header,

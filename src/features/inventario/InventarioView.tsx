@@ -96,6 +96,34 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
     );
   }
 
+  function exportInventoryBackup() {
+    if (state.products.length === 0) {
+      setImportMessage("No hay productos para respaldar.");
+      return;
+    }
+
+    const rows = state.products.map((product) => ({
+      SKU: product.sku,
+      Nombre: product.name,
+      Concentracion: product.concentration,
+      Presentacion: product.form,
+      Categoria: product.category,
+      Precio: product.price,
+      Stock: product.stock,
+      "Stock ilimitado": product.unlimitedStock ? "si" : "no",
+      "Receta retenida": product.retainedPrescription ? "si" : "no"
+    }));
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Inventario");
+
+    const date = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(workbook, `respaldo-inventario-farmacia-duoc-${date}.xlsx`);
+    setImportMessage(
+      `Respaldo generado con ${state.products.length} productos.`
+    );
+  }
+
   function readText(row: Record<string, unknown>, keys: string[]) {
     const normalizedKeys = keys.map((key) => normalizeHeader(key));
 
@@ -157,6 +185,9 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
     const doseForm = readText(row, [
       "Dosis / Forma farmacéutica",
       "Dosis / Forma farmaceutica",
+      "Concentracion",
+      "Concentración",
+      "concentration",
       "presentacion",
       "Presentación",
       "Presentacion"
@@ -361,6 +392,25 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
             type="file"
           />
         </label>
+      </section>
+
+      <section className="backup-inventory-card">
+        <div>
+          <span className="eyebrow">Respaldo local</span>
+          <h3>Extraer inventario</h3>
+          <p>
+            Descarga un archivo Excel con todos los productos guardados para
+            respaldarlos o cargarlos despues en otro computador.
+          </p>
+        </div>
+        <button
+          className="primary-action"
+          disabled={state.products.length === 0}
+          onClick={exportInventoryBackup}
+          type="button"
+        >
+          Descargar respaldo Excel
+        </button>
       </section>
 
       <section className="bulk-inventory-card">
