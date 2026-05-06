@@ -27,6 +27,24 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
   const [scanMessage, setScanMessage] = useState(
     "Escanea el codigo de barra y completa los datos minimos del producto."
   );
+  const [inventorySearch, setInventorySearch] = useState("");
+
+  const normalizedInventorySearch = normalizeSearchText(inventorySearch);
+  const filteredProducts = state.products.filter((product) => {
+    if (!normalizedInventorySearch) {
+      return true;
+    }
+
+    return normalizeSearchText(
+      [
+        product.sku,
+        product.name,
+        product.category,
+        product.form,
+        product.concentration
+      ].join(" ")
+    ).includes(normalizedInventorySearch);
+  });
 
   function updateProduct(productId: string, patch: Partial<Product>) {
     setState((current) => ({
@@ -100,6 +118,15 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  }
+
+  function normalizeSearchText(value: string) {
+    return value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/\s+/g, " ")
       .trim();
   }
 
@@ -516,6 +543,29 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
         </form>
       </section>
 
+      <section className="inventory-search-card">
+        <div>
+          <span className="eyebrow">Busqueda rapida</span>
+          <h3>Encontrar producto guardado</h3>
+          <p>
+            Busca por nombre, SKU, categoria, presentacion o concentracion para
+            activar rapidamente stock ilimitado o receta retenida.
+          </p>
+        </div>
+        <label>
+          Buscar en inventario
+          <input
+            autoComplete="off"
+            onChange={(event) => setInventorySearch(event.target.value)}
+            placeholder="Ej: paracetamol, 780..., comprimidos"
+            value={inventorySearch}
+          />
+        </label>
+        <strong>
+          Mostrando {filteredProducts.length} de {state.products.length} productos
+        </strong>
+      </section>
+
       <div className="table-card">
         <table>
           <thead>
@@ -531,7 +581,7 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
             </tr>
           </thead>
           <tbody>
-            {state.products.map((product) => (
+            {filteredProducts.map((product) => (
               <tr key={product.id}>
                 <td>
                   <strong>{product.name}</strong>
@@ -609,6 +659,13 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
                 </td>
               </tr>
             ))}
+            {filteredProducts.length === 0 && (
+              <tr>
+                <td className="empty-table-row" colSpan={8}>
+                  No se encontraron productos con esa busqueda.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

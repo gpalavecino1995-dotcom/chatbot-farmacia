@@ -226,6 +226,7 @@ button:disabled {
 .import-card,
 .bulk-inventory-card,
 .scan-product-card,
+.inventory-search-card,
 .seller-card,
 .table-card,
 .settings-form,
@@ -885,6 +886,54 @@ td input,
   gap: 10px;
 }
 
+.inventory-search-card {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(300px, 0.85fr) auto;
+  gap: 16px;
+  align-items: end;
+  padding: 18px;
+}
+
+.inventory-search-card h3 {
+  margin: 4px 0 8px;
+}
+
+.inventory-search-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.inventory-search-card label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.inventory-search-card input {
+  width: 100%;
+  border: 3px solid var(--black);
+  border-radius: 8px;
+  padding: 14px;
+  color: var(--ink);
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.inventory-search-card input:focus {
+  outline: 3px solid rgba(255, 182, 0, 0.36);
+}
+
+.inventory-search-card strong {
+  justify-self: end;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: var(--gold-soft);
+  color: var(--black);
+  white-space: nowrap;
+}
+
 .retained-modal-card {
   border-top-color: var(--red);
 }
@@ -951,6 +1000,13 @@ th {
   color: var(--muted);
   font-size: 0.82rem;
   text-transform: uppercase;
+}
+
+.empty-table-row {
+  padding: 28px;
+  color: var(--muted);
+  font-weight: 850;
+  text-align: center;
 }
 
 .history-list {
@@ -1125,6 +1181,7 @@ th {
   .scan-product-card,
   .scan-product-form,
   .scan-product-actions,
+  .inventory-search-card,
   .seller-card,
   .seller-actions,
   .patient-modal-card fieldset,
@@ -1155,5 +1212,11 @@ th {
 
   .line-subtotal {
     text-align: left;
+  }
+
+  .inventory-search-card strong {
+    justify-self: stretch;
+    text-align: center;
+    white-space: normal;
   }
 }
