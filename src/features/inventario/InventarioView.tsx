@@ -52,14 +52,28 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
   }
 
   function readText(row: Record<string, unknown>, keys: string[]) {
-    for (const key of keys) {
-      const value = row[key];
+    const normalizedKeys = keys.map((key) => normalizeHeader(key));
+
+    for (const [key, value] of Object.entries(row)) {
+      if (!normalizedKeys.includes(normalizeHeader(key))) {
+        continue;
+      }
+
       if (value !== undefined && value !== null && String(value).trim()) {
         return String(value).trim();
       }
     }
 
     return "";
+  }
+
+  function normalizeHeader(value: string) {
+    return value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
   }
 
   function readNumber(row: Record<string, unknown>, keys: string[], fallback = 0) {
@@ -123,11 +137,9 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
     try {
       const data = await file.arrayBuffer();
       const workbook = XLSX.read(data);
-      const sheetName = workbook.SheetNames[0];
+      const sheetName = selectProductSheet(workbook);
       const sheet = workbook.Sheets[sheetName];
-      const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, {
-        defval: ""
-      });
+      const rows = readProductRows(sheet);
 
       const products = rows
         .map((row, index) => normalizeProduct(row, index))
@@ -140,11 +152,53 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
 
       setState((current) => ({ ...current, products }));
       setImportMessage(
-        `Base cargada desde "${file.name}": ${products.length} productos importados.`
+        `Base cargada desde "${file.name}" (${sheetName}): ${products.length} productos importados.`
       );
     } catch {
       setImportMessage("No se pudo leer el archivo. Revisa que sea un .xlsx valido.");
     }
+  }
+
+  function selectProductSheet(workbook: XLSX.WorkBook) {
+    const preferred = workbook.SheetNames.find((name) =>
+      normalizeHeader(name).includes("listado")
+    );
+
+    if (preferred) {
+      return preferred;
+    }
+
+    return workbook.SheetNames
+      .map((name) => ({
+        name,
+        rows: XLSX.utils.sheet_to_json(workbook.Sheets[name], {
+          header: 1,
+          defval: ""
+        }).length
+      }))
+      .sort((a, b) => b.rows - a.rows)[0].name;
+  }
+
+  function readProductRows(sheet: XLSX.WorkSheet) {
+    const rawRows = XLSX.utils.sheet_to_json<unknown[]>(sheet, {
+      header: 1,
+      defval: ""
+    });
+
+    if (rawRows.length === 0) {
+      return [];
+    }
+
+    const headers = rawRows[0].map((header, index) =>
+      index === 0 ? "SKU" : String(header || `columna_${index + 1}`).trim()
+    );
+
+    return rawRows.slice(1).map((row) =>
+      headers.reduce<Record<string, unknown>>((record, header, index) => {
+        record[header] = row[index];
+        return record;
+      }, {})
+    );
   }
 
   function handleScanProductSubmit(event: FormEvent<HTMLFormElement>) {
