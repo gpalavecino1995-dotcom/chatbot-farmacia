@@ -21,7 +21,8 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
     category: "",
     price: "",
     stock: "",
-    unlimitedStock: false
+    unlimitedStock: false,
+    retainedPrescription: false
   });
   const [scanMessage, setScanMessage] = useState(
     "Escanea el codigo de barra y completa los datos minimos del producto."
@@ -155,6 +156,15 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
       unlimitedStock:
         readText(row, ["ilimitado", "Ilimitado", "stock_ilimitado", "Stock ilimitado"])
           .toLowerCase()
+          .startsWith("s"),
+      retainedPrescription:
+        readText(row, [
+          "receta retenida",
+          "Receta retenida",
+          "receta_retenida",
+          "Retenida"
+        ])
+          .toLowerCase()
           .startsWith("s")
     };
   }
@@ -254,7 +264,8 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
       category: scanProduct.category.trim() || "Sin categoria",
       price,
       stock,
-      unlimitedStock: scanProduct.unlimitedStock
+      unlimitedStock: scanProduct.unlimitedStock,
+      retainedPrescription: scanProduct.retainedPrescription
     };
 
     setState((current) => {
@@ -283,7 +294,8 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
       category: "",
       price: "",
       stock: "",
-      unlimitedStock: false
+      unlimitedStock: false,
+      retainedPrescription: false
     });
   }
 
@@ -464,6 +476,19 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
             />
             Stock ilimitado
           </label>
+          <label className="toggle-field">
+            <input
+              checked={scanProduct.retainedPrescription}
+              onChange={(event) =>
+                setScanProduct((current) => ({
+                  ...current,
+                  retainedPrescription: event.target.checked
+                }))
+              }
+              type="checkbox"
+            />
+            Receta retenida
+          </label>
           <div className="scan-product-actions">
             <button className="primary-action" type="submit">
               Guardar producto
@@ -479,7 +504,8 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
                   category: "",
                   price: "",
                   stock: "",
-                  unlimitedStock: false
+                  unlimitedStock: false,
+                  retainedPrescription: false
                 })
               }
               type="button"
@@ -499,6 +525,7 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
               <th>Precio</th>
               <th>Stock</th>
               <th>Ilimitado</th>
+              <th>Receta retenida</th>
               <th>Categoria</th>
               <th>Accion</th>
             </tr>
@@ -552,6 +579,20 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
                       type="checkbox"
                     />
                     <span>{product.unlimitedStock ? "Activo" : "No"}</span>
+                  </label>
+                </td>
+                <td>
+                  <label className="table-toggle">
+                    <input
+                      checked={Boolean(product.retainedPrescription)}
+                      onChange={(event) =>
+                        updateProduct(product.id, {
+                          retainedPrescription: event.target.checked
+                        })
+                      }
+                      type="checkbox"
+                    />
+                    <span>{product.retainedPrescription ? "Activo" : "No"}</span>
                   </label>
                 </td>
                 <td>

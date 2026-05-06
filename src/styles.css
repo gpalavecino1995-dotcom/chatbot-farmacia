@@ -885,6 +885,23 @@ td input,
   gap: 10px;
 }
 
+.retained-modal-card {
+  border-top-color: var(--red);
+}
+
+.retained-product-list {
+  display: grid;
+  gap: 8px;
+  border-left: 5px solid var(--red);
+  border-radius: 8px;
+  background: var(--red-soft);
+  padding: 12px 14px;
+}
+
+.retained-product-list strong {
+  color: var(--red);
+}
+
 .primary-action,
 .secondary-action {
   min-height: 58px;

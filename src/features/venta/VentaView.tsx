@@ -31,6 +31,8 @@ type PatientSaleData = {
   healthProvider: "FONASA" | "ISAPRE";
 };
 
+const PHARMACIST_AUTH_KEY = "AVS3111";
+
 function getCartProduct(products: Product[], item: CartItem) {
   return products.find((product) => product.id === item.productId);
 }
@@ -42,6 +44,9 @@ export function VentaView({ state, setState }: VentaViewProps) {
   );
   const [expandedQr, setExpandedQr] = useState(false);
   const [showPatientModal, setShowPatientModal] = useState(false);
+  const [showRetainedModal, setShowRetainedModal] = useState(false);
+  const [retainedAuthorized, setRetainedAuthorized] = useState(false);
+  const [pharmacistKey, setPharmacistKey] = useState("");
   const [patientRut, setPatientRut] = useState("");
   const [healthProvider, setHealthProvider] = useState<"" | "FONASA" | "ISAPRE">(
     ""
@@ -73,6 +78,9 @@ export function VentaView({ state, setState }: VentaViewProps) {
 
   const total = cartLines.reduce((sum, line) => sum + line!.subtotal, 0);
   const activeSeller = state.sellerName.trim();
+  const retainedPrescriptionLines = cartLines.filter(
+    (line) => line!.product.retainedPrescription
+  );
 
   function addProduct(product: Product) {
     const currentQuantity =
@@ -100,8 +108,10 @@ export function VentaView({ state, setState }: VentaViewProps) {
     });
 
     setAlert({
-      tone: "success",
-      message: `${product.name} agregado al carrito.`
+      tone: product.retainedPrescription ? "warning" : "success",
+      message: product.retainedPrescription
+        ? `${product.name} agregado. Este producto es con receta retenida y requiere atencion del quimico farmaceutico.`
+        : `${product.name} agregado al carrito.`
     });
   }
 
@@ -176,6 +186,16 @@ export function VentaView({ state, setState }: VentaViewProps) {
       return;
     }
 
+    if (retainedPrescriptionLines.length > 0 && !retainedAuthorized) {
+      setShowRetainedModal(true);
+      setAlert({
+        tone: "warning",
+        message:
+          "Este producto es con receta retenida. Solicita atencion del quimico farmaceutico."
+      });
+      return;
+    }
+
     if (state.settings.requireCustomerRut) {
       setShowPatientModal(true);
       return;
@@ -233,6 +253,9 @@ export function VentaView({ state, setState }: VentaViewProps) {
     setPatientRut("");
     setHealthProvider("");
     setShowPatientModal(false);
+    setShowRetainedModal(false);
+    setRetainedAuthorized(false);
+    setPharmacistKey("");
     setReceiptPreview({ imageUrl, qrUrl, receiptUrl });
     setAlert({
       tone: "success",
@@ -247,6 +270,9 @@ export function VentaView({ state, setState }: VentaViewProps) {
     setReceiptPreview(null);
     setExpandedQr(false);
     setShowPatientModal(false);
+    setShowRetainedModal(false);
+    setRetainedAuthorized(false);
+    setPharmacistKey("");
     setPatientRut("");
     setHealthProvider("");
     setAlert({ tone: "info", message: "Nueva venta simulada iniciada." });
@@ -273,6 +299,33 @@ export function VentaView({ state, setState }: VentaViewProps) {
       patientRut: cleanRut,
       healthProvider
     });
+  }
+
+  function submitRetainedAuthorization(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (pharmacistKey.trim().toUpperCase() !== PHARMACIST_AUTH_KEY) {
+      setAlert({
+        tone: "danger",
+        message: "Clave incorrecta. La venta requiere autorizacion del quimico farmaceutico."
+      });
+      return;
+    }
+
+    setRetainedAuthorized(true);
+    setShowRetainedModal(false);
+    setPharmacistKey("");
+    setAlert({
+      tone: "success",
+      message: "Autorizacion registrada. Puedes continuar la venta simulada."
+    });
+
+    if (state.settings.requireCustomerRut) {
+      setShowPatientModal(true);
+      return;
+    }
+
+    completeSale();
   }
 
   return (
@@ -524,6 +577,54 @@ export function VentaView({ state, setState }: VentaViewProps) {
                   <button
                     className="secondary-action"
                     onClick={() => setShowPatientModal(false)}
+                    type="button"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {showRetainedModal && (
+            <div className="patient-modal" role="dialog" aria-modal="true">
+              <form
+                className="patient-modal-card retained-modal-card"
+                onSubmit={submitRetainedAuthorization}
+              >
+                <div>
+                  <span className="eyebrow">Receta retenida</span>
+                  <h3>Atencion del quimico farmaceutico</h3>
+                  <p>
+                    Este producto es con receta retenida. Para continuar la
+                    venta simulada, solicita autorizacion e ingresa la clave del
+                    programa.
+                  </p>
+                </div>
+                <div className="retained-product-list">
+                  {retainedPrescriptionLines.map((line) => (
+                    <strong key={line!.product.id}>
+                      {line!.product.name} {line!.product.concentration}
+                    </strong>
+                  ))}
+                </div>
+                <label>
+                  Clave de autorizacion
+                  <input
+                    autoFocus
+                    onChange={(event) => setPharmacistKey(event.target.value)}
+                    placeholder="Clave del programa"
+                    type="password"
+                    value={pharmacistKey}
+                  />
+                </label>
+                <div className="patient-modal-actions">
+                  <button className="primary-action" type="submit">
+                    Autorizar y continuar
+                  </button>
+                  <button
+                    className="secondary-action"
+                    onClick={() => setShowRetainedModal(false)}
                     type="button"
                   >
                     Cancelar

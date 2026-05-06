@@ -15,6 +15,7 @@ export type Product = {
   price: number;
   stock: number;
   unlimitedStock?: boolean;
+  retainedPrescription?: boolean;
 };
 
 export type CartItem = {
