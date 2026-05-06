@@ -51,6 +51,32 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
     }));
   }
 
+  function setAllProductsUnlimited() {
+    if (state.products.length === 0) {
+      setImportMessage("No hay productos en inventario para modificar.");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "¿Activar stock ilimitado para todos los productos del inventario?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setState((current) => ({
+      ...current,
+      products: current.products.map((product) => ({
+        ...product,
+        unlimitedStock: true
+      }))
+    }));
+    setImportMessage(
+      `Stock ilimitado activado para ${state.products.length} productos.`
+    );
+  }
+
   function readText(row: Record<string, unknown>, keys: string[]) {
     const normalizedKeys = keys.map((key) => normalizeHeader(key));
 
@@ -296,6 +322,24 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
             type="file"
           />
         </label>
+      </section>
+
+      <section className="bulk-inventory-card">
+        <div>
+          <span className="eyebrow">Accion masiva</span>
+          <h3>Stock ilimitado para todos</h3>
+          <p>
+            Activa esta opcion cuando quieras que ningun producto descuente
+            unidades durante las ventas simuladas.
+          </p>
+        </div>
+        <button
+          className="primary-action"
+          onClick={setAllProductsUnlimited}
+          type="button"
+        >
+          Activar stock ilimitado en todos
+        </button>
       </section>
 
       <section className="scan-product-card">

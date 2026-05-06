@@ -224,6 +224,7 @@ button:disabled {
 .scan-panel,
 .cart-panel,
 .import-card,
+.bulk-inventory-card,
 .scan-product-card,
 .seller-card,
 .table-card,
@@ -262,6 +263,29 @@ button:disabled {
 
 .import-card strong {
   color: var(--black);
+}
+
+.bulk-inventory-card {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+}
+
+.bulk-inventory-card h3 {
+  margin: 4px 0 8px;
+}
+
+.bulk-inventory-card p {
+  max-width: 780px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.bulk-inventory-card button {
+  min-width: 260px;
 }
 
 .scan-product-card {
@@ -1096,6 +1120,7 @@ th {
 
   .section-header,
   .import-card,
+  .bulk-inventory-card,
   .cart-header,
   .history-card-header,
   .total-box {
