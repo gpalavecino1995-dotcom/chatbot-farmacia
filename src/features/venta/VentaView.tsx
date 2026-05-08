@@ -1,6 +1,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { AppState, CartItem, Product } from "../../types";
+import medicamentos from "../../data/medicamentos.json";
 import { formatMoney } from "../../utils/format";
 import {
   buildReceiptUrl,
@@ -31,7 +32,21 @@ type PatientSaleData = {
   healthProvider: "FONASA" | "ISAPRE";
 };
 
+type VademecumMedicine = {
+  nombre_comercial: string;
+  principio_activo: string;
+  forma_farmaceutica: string;
+  concentracion: string;
+  indicacion_general: string;
+  advertencias: string;
+  contraindicaciones: string;
+  interacciones: string;
+  condicion_venta: string;
+  consejo_dispensacion: string;
+};
+
 const PHARMACIST_AUTH_KEY = "AVS3111";
+const VADEMECUM_MEDICINES = medicamentos as VademecumMedicine[];
 
 function getCartProduct(products: Product[], item: CartItem) {
   return products.find((product) => product.id === item.productId);
@@ -45,6 +60,8 @@ export function VentaView({ state, setState }: VentaViewProps) {
   const [expandedQr, setExpandedQr] = useState(false);
   const [showPatientModal, setShowPatientModal] = useState(false);
   const [showRetainedModal, setShowRetainedModal] = useState(false);
+  const [showVademecumModal, setShowVademecumModal] = useState(false);
+  const [vademecumSearch, setVademecumSearch] = useState("");
   const [retainedAuthorized, setRetainedAuthorized] = useState(false);
   const [pharmacistKey, setPharmacistKey] = useState("");
   const [patientRut, setPatientRut] = useState("");
@@ -81,6 +98,23 @@ export function VentaView({ state, setState }: VentaViewProps) {
   const retainedPrescriptionLines = cartLines.filter(
     (line) => line!.product.retainedPrescription
   );
+  const normalizedVademecumSearch = normalizeSearch(vademecumSearch);
+  const vademecumResults =
+    normalizedVademecumSearch.length === 0
+      ? []
+      : VADEMECUM_MEDICINES.filter((medicine) =>
+          normalizeSearch(
+            `${medicine.nombre_comercial} ${medicine.principio_activo}`
+          ).includes(normalizedVademecumSearch)
+        );
+
+  function normalizeSearch(value: string) {
+    return value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
 
   function addProduct(product: Product) {
     const currentQuantity =
@@ -367,6 +401,20 @@ export function VentaView({ state, setState }: VentaViewProps) {
             <span>{alert.message}</span>
           </div>
 
+          <section className="vademecum-entry">
+            <div>
+              <span className="eyebrow">Apoyo docente</span>
+              <h3>Consulta farmacologica</h3>
+            </div>
+            <button
+              className="secondary-action"
+              onClick={() => setShowVademecumModal(true)}
+              type="button"
+            >
+              Consultar vademécum
+            </button>
+          </section>
+
           <div className="student-instructions">
             <h3>Instrucciones breves</h3>
             <ul>
@@ -631,6 +679,117 @@ export function VentaView({ state, setState }: VentaViewProps) {
                   </button>
                 </div>
               </form>
+            </div>
+          )}
+
+          {showVademecumModal && (
+            <div className="patient-modal" role="dialog" aria-modal="true">
+              <div className="patient-modal-card vademecum-modal-card">
+                <div>
+                  <span className="eyebrow">Consulta educativa</span>
+                  <h3>Vademécum</h3>
+                  <p>
+                    Revisa informacion de apoyo para orientar la atencion
+                    farmacéutica simulada.
+                  </p>
+                </div>
+
+                <section className="vademecum-external">
+                  <div>
+                    <strong>Abrir vademécum externo</strong>
+                    <span>Consulta una fuente externa en una nueva pestaña.</span>
+                  </div>
+                  <a
+                    className="primary-action"
+                    href="https://web.farmaciasahumada.cl/fasaonline/fasa/MFT/MFT.HTM"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Abrir vademécum externo
+                  </a>
+                </section>
+
+                <section className="vademecum-internal">
+                  <div>
+                    <span className="eyebrow">Vademécum interno</span>
+                    <h4>Buscar medicamento</h4>
+                  </div>
+                  <label>
+                    Nombre comercial o principio activo
+                    <input
+                      autoComplete="off"
+                      onChange={(event) => setVademecumSearch(event.target.value)}
+                      placeholder="Ej: paracetamol, ibuprofeno"
+                      value={vademecumSearch}
+                    />
+                  </label>
+
+                  <div className="vademecum-results">
+                    {normalizedVademecumSearch.length > 0 &&
+                      vademecumResults.length === 0 && (
+                        <div className="empty-vademecum">
+                          No se encontró información para este medicamento en el
+                          vademécum interno.
+                        </div>
+                      )}
+
+                    {vademecumResults.map((medicine) => (
+                      <article
+                        className="vademecum-result"
+                        key={`${medicine.nombre_comercial}-${medicine.concentracion}`}
+                      >
+                        <h4>{medicine.nombre_comercial}</h4>
+                        <dl>
+                          <div>
+                            <dt>Principio activo</dt>
+                            <dd>{medicine.principio_activo}</dd>
+                          </div>
+                          <div>
+                            <dt>Forma farmaceutica</dt>
+                            <dd>{medicine.forma_farmaceutica}</dd>
+                          </div>
+                          <div>
+                            <dt>Concentracion</dt>
+                            <dd>{medicine.concentracion}</dd>
+                          </div>
+                          <div>
+                            <dt>Indicacion general</dt>
+                            <dd>{medicine.indicacion_general}</dd>
+                          </div>
+                          <div>
+                            <dt>Advertencias</dt>
+                            <dd>{medicine.advertencias}</dd>
+                          </div>
+                          <div>
+                            <dt>Contraindicaciones</dt>
+                            <dd>{medicine.contraindicaciones}</dd>
+                          </div>
+                          <div>
+                            <dt>Interacciones</dt>
+                            <dd>{medicine.interacciones}</dd>
+                          </div>
+                          <div>
+                            <dt>Condicion de venta</dt>
+                            <dd>{medicine.condicion_venta}</dd>
+                          </div>
+                          <div>
+                            <dt>Consejo de dispensacion</dt>
+                            <dd>{medicine.consejo_dispensacion}</dd>
+                          </div>
+                        </dl>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <button
+                  className="secondary-action"
+                  onClick={() => setShowVademecumModal(false)}
+                  type="button"
+                >
+                  Cerrar vademécum
+                </button>
+              </div>
             </div>
           )}
 

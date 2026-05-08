@@ -1,0 +1,38 @@
+[
+  {
+    "nombre_comercial": "Paracetamol",
+    "principio_activo": "Paracetamol",
+    "forma_farmaceutica": "Comprimidos",
+    "concentracion": "500 mg",
+    "indicacion_general": "Alivio sintomatico del dolor leve a moderado y estados febriles.",
+    "advertencias": "Evitar superar la dosis diaria recomendada. Precaucion en pacientes con enfermedad hepatica.",
+    "contraindicaciones": "Hipersensibilidad al paracetamol o daño hepatico severo.",
+    "interacciones": "Puede aumentar riesgo de toxicidad hepatica con alcohol o inductores hepaticos.",
+    "condicion_venta": "Venta directa segun presentacion y normativa local.",
+    "consejo_dispensacion": "Indicar que no debe combinar varios productos que contengan paracetamol."
+  },
+  {
+    "nombre_comercial": "Ibuprofeno",
+    "principio_activo": "Ibuprofeno",
+    "forma_farmaceutica": "Comprimidos recubiertos",
+    "concentracion": "400 mg",
+    "indicacion_general": "Dolor leve a moderado, inflamacion y fiebre.",
+    "advertencias": "Usar con precaucion en pacientes con antecedentes gastricos, renales o cardiovasculares.",
+    "contraindicaciones": "Ulcera activa, alergia a AINEs, insuficiencia renal severa o tercer trimestre de embarazo.",
+    "interacciones": "Puede interactuar con anticoagulantes, antihipertensivos, corticoides y otros AINEs.",
+    "condicion_venta": "Venta directa o bajo indicacion profesional segun dosis y presentacion.",
+    "consejo_dispensacion": "Recomendar tomar con alimento y consultar si el dolor o fiebre persiste."
+  },
+  {
+    "nombre_comercial": "Loratadina",
+    "principio_activo": "Loratadina",
+    "forma_farmaceutica": "Comprimidos",
+    "concentracion": "10 mg",
+    "indicacion_general": "Alivio de sintomas asociados a rinitis alergica y urticaria.",
+    "advertencias": "Precaucion en pacientes con enfermedad hepatica. Puede causar somnolencia en algunas personas.",
+    "contraindicaciones": "Hipersensibilidad a loratadina o a componentes de la formulacion.",
+    "interacciones": "Consultar si usa otros medicamentos que puedan aumentar somnolencia o afectar metabolismo hepatico.",
+    "condicion_venta": "Venta directa segun normativa local.",
+    "consejo_dispensacion": "Indicar administrar una vez al dia y evitar duplicar dosis si olvida una toma."
+  }
+]
