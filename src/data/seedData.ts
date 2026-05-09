@@ -60,6 +60,7 @@ export const initialState: AppState = {
     cashierName: "Estudiante en role play",
     currency: "CLP",
     lowStockThreshold: 8,
-    requireCustomerRut: false
+    requireCustomerRut: false,
+    vademecumEnabled: true
   }
 };

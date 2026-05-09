@@ -401,19 +401,21 @@ export function VentaView({ state, setState }: VentaViewProps) {
             <span>{alert.message}</span>
           </div>
 
-          <section className="vademecum-entry">
-            <div>
-              <span className="eyebrow">Apoyo docente</span>
-              <h3>Consulta farmacologica</h3>
-            </div>
-            <button
-              className="secondary-action"
-              onClick={() => setShowVademecumModal(true)}
-              type="button"
-            >
-              Consultar vademécum
-            </button>
-          </section>
+          {state.settings.vademecumEnabled && (
+            <section className="vademecum-entry">
+              <div>
+                <span className="eyebrow">Apoyo docente</span>
+                <h3>Consulta farmacologica</h3>
+              </div>
+              <button
+                className="secondary-action"
+                onClick={() => setShowVademecumModal(true)}
+                type="button"
+              >
+                Consultar vademécum
+              </button>
+            </section>
+          )}
 
           <div className="student-instructions">
             <h3>Instrucciones breves</h3>
@@ -701,7 +703,7 @@ export function VentaView({ state, setState }: VentaViewProps) {
                   </div>
                   <a
                     className="primary-action"
-                    href="https://web.farmaciasahumada.cl/fasaonline/fasa/MFT/MFT.HTM"
+                    href="https://www.colegiofarmaceutico.cl/MFT/MFT.HTM"
                     rel="noopener noreferrer"
                     target="_blank"
                   >

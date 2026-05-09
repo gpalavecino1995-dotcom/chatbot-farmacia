@@ -47,6 +47,7 @@ export type AppSettings = {
   currency: string;
   lowStockThreshold: number;
   requireCustomerRut: boolean;
+  vademecumEnabled: boolean;
 };
 
 export type AppState = {

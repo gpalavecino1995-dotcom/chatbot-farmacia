@@ -94,6 +94,19 @@ export function ConfiguracionView({
           />
           Solicitar RUT cliente y prestador de salud al finalizar venta
         </label>
+        <label className="settings-toggle">
+          <input
+            checked={draft.vademecumEnabled}
+            onChange={(event) =>
+              setDraft((current) => ({
+                ...current,
+                vademecumEnabled: event.target.checked
+              }))
+            }
+            type="checkbox"
+          />
+          Mostrar boton de vademecum en la pestaña Venta
+        </label>
         <div className="settings-actions">
           <button className="primary-action" type="submit">
             Guardar configuracion
