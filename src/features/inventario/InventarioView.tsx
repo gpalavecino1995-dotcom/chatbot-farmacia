@@ -151,7 +151,7 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
     ];
 
     const instructions = XLSX.utils.aoa_to_sheet([
-      ["Plantilla de inventario - Simulador POS Farmacia"],
+      ["Plantilla de inventario - POS de Ventas y Almacenamiento"],
       [],
       ["Instrucciones"],
       ["1. Completa una fila por cada producto en la hoja Inventario."],

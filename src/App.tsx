@@ -65,7 +65,7 @@ export default function App() {
             <img src="./duoc-uc-logo.png" alt="Duoc UC" />
           </div>
           <span className="brand-kicker">Uso docente</span>
-          <h1>POS Farmacia Duoc UC</h1>
+          <h1>POS de Ventas y Almacenamiento</h1>
           <p>Caja simulada para farmacia comunitaria y role play.</p>
         </div>
 
@@ -135,12 +135,12 @@ function PublicReceiptView({ imageUrl }: PublicReceiptViewProps) {
     <main className="public-receipt-page">
       <section className="public-receipt-card">
         <span className="eyebrow">Boleta ficticia</span>
-        <h1>POS Farmacia Duoc UC</h1>
+        <h1>POS de Ventas y Almacenamiento</h1>
         <p>
           Imagen generada para actividad educativa. No corresponde a una venta
           real ni a un documento tributario.
         </p>
-        <img src={imageUrl} alt="Boleta ficticia POS Farmacia Duoc UC" />
+        <img src={imageUrl} alt="Boleta ficticia POS de Ventas y Almacenamiento" />
       </section>
     </main>
   );

@@ -100,7 +100,7 @@ export function createReceiptJpg(payload: ReceiptPayload) {
   context.font = "700 34px Arial";
   context.fillText("Duoc UC", 28, 62);
   context.font = "700 22px Arial";
-  context.fillText("Boleta ficticia POS Farmacia", 28, 96);
+  context.fillText("Boleta ficticia POS de Ventas y Almacenamiento", 28, 96);
 
   context.font = "14px Arial";
   let y = 136;

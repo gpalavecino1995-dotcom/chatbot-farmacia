@@ -1,4 +1,4 @@
-# Simulador POS Farmacia
+# POS de Ventas y Almacenamiento
 
 Aplicacion web educativa en React + TypeScript + Vite para simular una caja POS de farmacia comunitaria en actividades docentes y role play con estudiantes.
 
