@@ -98,7 +98,7 @@ export function createReceiptJpg(payload: ReceiptPayload) {
 
   context.fillStyle = "#111111";
   context.font = "700 34px Arial";
-  context.fillText("Duoc UC", 28, 62);
+  context.fillText("Gio", 28, 62);
   context.font = "700 22px Arial";
   context.fillText("Boleta ficticia POS de Ventas y Almacenamiento", 28, 96);
 

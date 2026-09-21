@@ -118,7 +118,7 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Inventario");
 
     const date = new Date().toISOString().slice(0, 10);
-    XLSX.writeFile(workbook, `respaldo-inventario-farmacia-duoc-${date}.xlsx`);
+    XLSX.writeFile(workbook, `respaldo-inventario-farmacia-gio-${date}.xlsx`);
     setImportMessage(
       `Respaldo generado con ${state.products.length} productos.`
     );

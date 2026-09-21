@@ -56,7 +56,7 @@ export const initialState: AppState = {
   sales: [],
   sellerName: "",
   settings: {
-    pharmacyName: "Centro de Simulacion Duoc UC",
+    pharmacyName: "Centro de Simulacion Gio",
     cashierName: "Estudiante en role play",
     currency: "CLP",
     lowStockThreshold: 8,

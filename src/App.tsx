@@ -61,10 +61,10 @@ export default function App() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand-block">
-          <div className="duoc-logo-card" aria-label="Duoc UC">
-            <img src="./duoc-uc-logo.png" alt="Duoc UC" />
+          <div className="gio-logo-card" aria-label="Gio">
+            <img src="./gio-logo.png" alt="Logo personal Gio" />
           </div>
-          <span className="brand-kicker">Uso docente</span>
+          <span className="brand-kicker">Aplicación educativa de Gio</span>
           <h1>POS de Ventas y Almacenamiento</h1>
           <p>Caja simulada para farmacia comunitaria y role play.</p>
         </div>
@@ -122,6 +122,9 @@ export default function App() {
           </ProtectedSection>
         )}
       </main>
+      <div className="ownership-watermark" aria-hidden="true">
+        © Gio · Aplicación de propiedad de Gio
+      </div>
     </div>
   );
 }
