@@ -11,13 +11,20 @@ export function loadState(): AppState {
     }
 
     const parsed = JSON.parse(saved) as Partial<AppState>;
+    const savedPharmacyName = parsed.settings?.pharmacyName;
+    const pharmacyName =
+      savedPharmacyName === "Centro de Simulacion Duoc UC" ||
+      savedPharmacyName === "Centro de Simulación Duoc UC"
+        ? initialState.settings.pharmacyName
+        : savedPharmacyName ?? initialState.settings.pharmacyName;
 
     return {
       ...initialState,
       ...parsed,
       settings: {
         ...initialState.settings,
-        ...parsed.settings
+        ...parsed.settings,
+        pharmacyName
       },
       sellerName: parsed.sellerName ?? initialState.sellerName
     };
