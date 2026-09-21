@@ -1124,7 +1124,10 @@ td input,
 }
 
 .table-card {
+  max-height: min(62vh, 680px);
   overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 table {
@@ -1142,10 +1145,14 @@ td {
 }
 
 th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   background: var(--surface-soft);
   color: var(--muted);
   font-size: 0.82rem;
   text-transform: uppercase;
+  box-shadow: 0 1px 0 var(--line);
 }
 
 .empty-table-row {
@@ -1326,6 +1333,10 @@ th {
     bottom: 8px;
     max-width: calc(100vw - 20px);
     font-size: 0.64rem;
+  }
+
+  .table-card {
+    max-height: 58vh;
   }
 
   .main-nav,
