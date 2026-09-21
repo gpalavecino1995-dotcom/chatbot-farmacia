@@ -267,6 +267,17 @@ button:disabled {
   color: var(--black);
 }
 
+.inventory-import-actions {
+  display: grid;
+  min-width: 250px;
+  gap: 10px;
+}
+
+.inventory-import-actions .file-upload,
+.inventory-import-actions .secondary-action {
+  width: 100%;
+}
+
 .backup-inventory-card,
 .bulk-inventory-card {
   display: flex;
@@ -1299,6 +1310,7 @@ th {
 
   .main-nav,
   .section-header,
+  .inventory-import-actions,
   .scan-input-row,
   .scan-product-card,
   .scan-product-form,
