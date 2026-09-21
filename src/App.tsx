@@ -123,7 +123,7 @@ export default function App() {
         )}
       </main>
       <div className="ownership-watermark" aria-hidden="true">
-        © Gio · Aplicación de propiedad de Gio
+        Aplicación educativa de Gio
       </div>
     </div>
   );
