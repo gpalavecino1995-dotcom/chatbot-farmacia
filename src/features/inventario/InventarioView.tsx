@@ -124,6 +124,55 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
     );
   }
 
+  function downloadInventoryTemplate() {
+    const headers = [
+      "SKU",
+      "Nombre",
+      "Concentracion",
+      "Presentacion",
+      "Categoria",
+      "Precio",
+      "Stock",
+      "Stock ilimitado",
+      "Receta retenida"
+    ];
+
+    const worksheet = XLSX.utils.aoa_to_sheet([headers]);
+    worksheet["!cols"] = [
+      { wch: 18 },
+      { wch: 32 },
+      { wch: 20 },
+      { wch: 24 },
+      { wch: 26 },
+      { wch: 14 },
+      { wch: 12 },
+      { wch: 18 },
+      { wch: 18 }
+    ];
+
+    const instructions = XLSX.utils.aoa_to_sheet([
+      ["Plantilla de inventario - Simulador POS Farmacia"],
+      [],
+      ["Instrucciones"],
+      ["1. Completa una fila por cada producto en la hoja Inventario."],
+      ["2. No cambies los nombres de las columnas."],
+      ["3. SKU y Nombre son los campos principales de identificacion."],
+      ["4. Precio y Stock deben ingresarse como numeros iguales o mayores que 0."],
+      ["5. En Stock ilimitado y Receta retenida escribe si o no."],
+      ["6. Guarda el archivo en formato .xlsx y subelo desde la pagina Inventario."],
+      ["7. La carga reemplazara el inventario actualmente guardado en la aplicacion."]
+    ]);
+    instructions["!cols"] = [{ wch: 90 }];
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Inventario");
+    XLSX.utils.book_append_sheet(workbook, instructions, "Instrucciones");
+    XLSX.writeFile(workbook, "plantilla-inventario-farmacia.xlsx");
+    setImportMessage(
+      "Plantilla descargada. Completala sin cambiar los encabezados y vuelve a subirla aqui."
+    );
+  }
+
   function readText(row: Record<string, unknown>, keys: string[]) {
     const normalizedKeys = keys.map((key) => normalizeHeader(key));
 
@@ -378,20 +427,29 @@ export function InventarioView({ state, setState }: InventarioViewProps) {
           </p>
           <strong>{importMessage}</strong>
         </div>
-        <label className="file-upload">
-          Subir Excel
-          <input
-            accept=".xlsx,.xls"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (file) {
-                void importProducts(file);
-              }
-              event.target.value = "";
-            }}
-            type="file"
-          />
-        </label>
+        <div className="inventory-import-actions">
+          <button
+            className="secondary-action"
+            onClick={downloadInventoryTemplate}
+            type="button"
+          >
+            Descargar plantilla Excel
+          </button>
+          <label className="file-upload">
+            Subir inventario Excel
+            <input
+              accept=".xlsx,.xls"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) {
+                  void importProducts(file);
+                }
+                event.target.value = "";
+              }}
+              type="file"
+            />
+          </label>
+        </div>
       </section>
 
       <section className="backup-inventory-card">
