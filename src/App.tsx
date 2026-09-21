@@ -64,7 +64,6 @@ export default function App() {
           <div className="gio-logo-card" aria-label="Gio">
             <img src="./gio-logo.png" alt="Logo personal Gio" />
           </div>
-          <span className="brand-kicker">Aplicación educativa de Gio</span>
           <h1>POS de Ventas y Almacenamiento</h1>
           <p>Caja simulada para farmacia comunitaria y role play.</p>
         </div>
